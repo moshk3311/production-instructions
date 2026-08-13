@@ -382,11 +382,11 @@ function generate(){
   h+="<div class='kv-row'><span class='k'>"+esc(L.lbl_total)+"</span><span class='v'>"+esc(D.q_total)+"</span></div>";
   h+="<div class='kv-row'><span class='k'>"+esc(L.lbl_humidity)+"</span><span class='v'>"+esc(D.q_humidity)+"</span></div>";
   h+="<div class='kv-row'><span class='k'>"+esc(L.lbl_recycling)+"</span><span class='v'>"+esc(D.q_recycling)+" "+esc(L.lbl_recycling_suffix)+"</span></div>";
-  if(isFine) h+="<div class='alert-strip'>"+esc(D.q_fine_note)+"</div>";
+  h+="<div class='fine-box'><div class='fb-title'>"+esc(L.lbl_fine_section)+"</div><div>"+esc(L.lbl_mist_target)+": "+esc(D.q_mist_target)+" &nbsp;|&nbsp; "+esc(L.lbl_mist_max)+": "+esc(D.q_mist_max)+"</div><div style='color:var(--ink-soft);font-size:10.5px;margin-top:4px'>"+esc(D.q_mist_note)+"</div></div>";
   h+="</div>";
-  h+="<div class='ig-card-body'><div class='fine-box'><div class='fb-title'>"+esc(L.lbl_fine_section)+"</div><div>"+esc(L.lbl_mist_target)+": "+esc(D.q_mist_target)+" &nbsp;|&nbsp; "+esc(L.lbl_mist_max)+": "+esc(D.q_mist_max)+"</div><div style='color:var(--ink-soft);font-size:10.5px;margin-top:4px'>"+esc(D.q_mist_note)+"</div></div>";
-  h+="<div class='gauge-wrap'><svg width='132' height='76' viewBox='0 0 64 36'><path d='M6,32 A26,26 0 0,1 58,32' fill='none' stroke='#e6ecf2' stroke-width='8' stroke-linecap='round'/><path d='M6,32 A26,26 0 0,1 32,6' fill='none' stroke='#c3ced8' stroke-width='8' stroke-linecap='round'/><path d='M32,6 A26,26 0 0,1 50,11' fill='none' stroke='#9aa7b3' stroke-width='8' stroke-linecap='round'/><path d='M50,11 A26,26 0 0,1 58,32' fill='none' stroke='#6b7783' stroke-width='8' stroke-linecap='round'/><line x1='32' y1='32' x2='46' y2='13' stroke='#1a1a1a' stroke-width='2.5' stroke-linecap='round'/><circle cx='32' cy='32' r='3.5' fill='#1a1a1a'/></svg><div class='gauge-lbl'>"+esc(L.lbl_factor_prefix)+": <span class='gauge-val'>"+esc(D.q_factor)+"</span></div></div></div>";
-  h+="</div></div>";
+  h+="<div class='ig-card-body'><div class='gauge-wrap'><svg width='132' height='76' viewBox='0 0 64 36'><path d='M6,32 A26,26 0 0,1 58,32' fill='none' stroke='#e6ecf2' stroke-width='8' stroke-linecap='round'/><path d='M6,32 A26,26 0 0,1 32,6' fill='none' stroke='#c3ced8' stroke-width='8' stroke-linecap='round'/><path d='M32,6 A26,26 0 0,1 50,11' fill='none' stroke='#9aa7b3' stroke-width='8' stroke-linecap='round'/><path d='M50,11 A26,26 0 0,1 58,32' fill='none' stroke='#6b7783' stroke-width='8' stroke-linecap='round'/><line x1='32' y1='32' x2='46' y2='13' stroke='#1a1a1a' stroke-width='2.5' stroke-linecap='round'/><circle cx='32' cy='32' r='3.5' fill='#1a1a1a'/></svg><div class='gauge-lbl'>"+esc(L.lbl_factor_prefix)+": <span class='gauge-val'>"+esc(D.q_factor)+"</span></div></div>";
+  if(isFine) h+="<div class='alert-strip'>"+esc(D.q_fine_note)+"</div>";
+  h+="</div></div></div>";
   // Mgmt
   h+="<div class='ig-card'><div class='ig-card-header'>"+esc(D.mgmt_card_title)+"</div><div class='ig-card-body'>";
   h+="<div style='font-size:12px;margin-bottom:9px'>"+esc(D.mgmt_contact)+"</div>";
