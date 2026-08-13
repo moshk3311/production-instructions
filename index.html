@@ -13,6 +13,7 @@
   --teal:#14a5a0;--teal-soft:#e2f4f3;--teal-border:#a7ded9;
   --amber:#f5d98b;--green:#146b3a;--red:#a5342c;
   --warn-bg:#fff7e6;--warn-border:#f5d98b;--warn-text:#a86b00;
+  --ink:#1a1a1a;--ink-soft:#5f6b76;
   --gray-1:#f5f9fc;--gray-2:#eef3f7;--gray-3:#dbe6ef;--gray-5:#7a8a9a;
   --border:1px solid var(--gray-3);--radius:6px;--font:'Heebo',Arial,sans-serif;
 }
@@ -96,55 +97,65 @@ html,body{font-family:var(--font);background:#fff;color:#1a1a2e}
 .ig-header-sub{font-size:12px;font-weight:300;opacity:.8;margin-top:1px}
 .ig-header-date{grid-column:3;justify-self:end;text-align:left;white-space:nowrap;font-size:12px;opacity:.8;font-weight:300}
 .ig-alert{background:var(--warn-bg);border:2px solid var(--warn-border);border-radius:var(--radius);padding:8px 12px;margin-top:6px;display:flex;gap:10px;align-items:flex-start}
-.ig-alert-icon{font-size:18px;flex-shrink:0;line-height:1}
 .ig-alert-title{font-weight:700;font-size:11px;color:var(--warn-text);margin-bottom:2px}
 .ig-alert-text{font-size:10px;color:var(--warn-text);line-height:1.4}
 .ig-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
 .ig-card{background:#fff;border:var(--border);border-radius:var(--radius);overflow:hidden}
 .ig-card-header{background:var(--blue-mid);color:#fff;font-size:10.5px;font-weight:700;padding:5px 10px;letter-spacing:.02em}
 .ig-card-body{padding:8px 10px;font-size:9.5px}
+/* ── מערכת אחידה לארבע המסגרות ──────────────────────
+   טקסט שחור אחיד. כותרות ביניים מודגשות, ערכים לא.
+   קופסה אחת בלבד (.blk). צבע שמור לאזהרות בלבד. */
+.infographic{color:var(--ink)}
+.ig-card-body{color:var(--ink)}
+
+/* קופסה אחידה — כל הבלוקים בכל המסגרות נראים אותו דבר */
+.blk,.info-box,.param-box,.green-box,.fine-box,.arrow-row,.quality-check-row{
+  background:var(--gray-1);border:1px solid var(--gray-3);border-radius:4px;
+  padding:6px 8px;font-size:9px;line-height:1.6;color:var(--ink)}
+
+/* כותרת ביניים אחידה — הדבר היחיד שמודגש */
+.sub-title,.info-box .box-title,.green-box .g-title,.fine-box .fb-title,.qc-title,.columns-title{
+  font-weight:700;font-size:9.5px;color:var(--ink);margin-bottom:4px;
+  padding-bottom:3px;border-bottom:1px solid var(--gray-3)}
+
+/* תוויות אפורות, ערכים שחורים ולא מודגשים */
+.lbl,.k,.p-lbl,.qc-val,.gauge-lbl{color:var(--ink-soft);font-weight:400}
+.val,.v,.p-val{color:var(--ink);font-weight:400}
+
 .info-row{display:flex;gap:16px;margin-bottom:6px;flex-wrap:wrap}
-.info-item .lbl{color:var(--gray-5);font-size:9px;font-weight:400}
-.info-item .val{font-weight:700;font-size:10.5px;color:var(--blue-dark)}
-.arrow-row{display:flex;align-items:center;gap:8px;background:var(--gray-1);border-radius:4px;padding:4px 8px;margin-bottom:6px;font-size:9px}
-.gssp-badge{background:var(--teal-soft);border:1px solid var(--teal-border);border-radius:4px;padding:2px 7px;font-weight:700;font-size:9px;color:#0b6b67}
-.arrow-icon{color:var(--blue-mid);font-size:16px;font-weight:700}
-.info-box{background:var(--gray-1);border:1px solid var(--gray-3);border-radius:4px;padding:6px 8px;margin-bottom:5px;font-size:9px;line-height:1.6}
-.info-box .box-title{font-weight:700;font-size:10px;color:var(--blue-dark);margin-bottom:3px}
-.info-box .lbl{color:var(--gray-5)}
+.info-item .lbl{font-size:9px}
+.info-item .val{font-size:10px}
+.arrow-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.gssp-badge{background:var(--gray-2);border:1px solid var(--gray-3);border-radius:4px;padding:2px 7px;font-weight:700;font-size:9px;color:var(--ink)}
+.arrow-icon{color:var(--ink-soft);font-size:14px;font-weight:400}
+.info-box{margin-bottom:5px}
+.list-line{margin-bottom:1px}
 .warn-strip{background:var(--warn-bg);border:1px solid var(--warn-border);border-radius:4px;padding:4px 8px;font-size:9px;font-weight:700;color:var(--warn-text)}
 .params-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:7px}
-.param-box{text-align:center;background:var(--gray-1);border:var(--border);border-radius:4px;padding:5px 6px;min-width:56px;flex:1}
-.param-box .p-icon{font-size:14px;line-height:1;margin-bottom:2px}
-.param-box .p-lbl{font-size:7.5px;color:var(--gray-5)}
-.param-box .p-val{font-weight:700;font-size:10px;color:var(--blue-dark)}
-.green-box{background:var(--teal-soft);border:1px solid var(--teal-border);border-radius:4px;padding:6px 8px;font-size:9px;line-height:1.7}
-.green-box .g-title{font-weight:700;font-size:10px;color:#0b6b67;margin-bottom:3px}
+.param-box{text-align:center;padding:5px 6px;min-width:56px;flex:1}
+.param-box .p-lbl{font-size:8px;margin-bottom:2px}
+.param-box .p-val{font-size:10px}
+.green-box{line-height:1.7}
 .quality-split{display:grid;grid-template-columns:1fr 1fr}
-.quality-split>div:first-child{border-left:var(--border)}
+.quality-split>div:first-child{border-left:1px solid var(--gray-3)}
 .kv-row{display:flex;justify-content:space-between;align-items:baseline;padding:3px 0;border-bottom:1px solid var(--gray-2);font-size:9.5px}
 .kv-row:last-child{border-bottom:none}
-.kv-row .k{color:var(--gray-5)}
-.kv-row .v{font-weight:700;color:var(--blue-dark)}
+/* אזהרה — אחד משני המקומות היחידים עם צבע */
 .alert-strip{background:#fdf0ee;border:1px solid #e8b7b1;border-radius:4px;padding:4px 7px;margin-top:5px;font-size:8.5px;font-weight:700;color:var(--red)}
 .gauge-wrap{text-align:center;margin-bottom:6px}
-.gauge-lbl{font-size:8.5px;color:var(--gray-5);margin-top:2px}
-.gauge-val{font-weight:700;color:var(--red)}
-.fine-box{background:var(--gray-1);border:var(--border);border-radius:4px;padding:5px 7px;font-size:8.5px;line-height:1.6}
-.fine-box .fb-title{font-weight:700;font-size:9.5px;margin-bottom:2px;color:var(--blue-dark)}
+.gauge-lbl{font-size:8.5px;margin-top:2px}
+.gauge-val{color:var(--ink);font-weight:700}
+.fine-box{font-size:8.5px}
 .status-pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:7px}
-.pill{border-radius:20px;padding:3px 10px;font-size:9px;font-weight:700}
-.pill-green{background:#eaf3ed;border:1px solid #b6d6c2;color:var(--green)}
-.pill-red{background:#fdf0ee;border:1px solid #e8b7b1;color:var(--red)}
-.columns-title{font-size:9.5px;font-weight:700;color:var(--blue-dark);border-top:var(--border);padding-top:7px;margin-top:4px;margin-bottom:8px}
+.pill{border-radius:4px;padding:3px 10px;font-size:9px;font-weight:400;background:var(--gray-1);border:1px solid var(--gray-3);color:var(--ink)}
+.pill-alert{background:#fdf0ee;border-color:#e8b7b1;color:var(--red);font-weight:700}
+.columns-title{margin-top:6px}
 .columns-row{display:flex;gap:8px;justify-content:space-around}
 .col-item{text-align:center}
-.col-bar{width:52px;height:40px;border-radius:6px 6px 0 0;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:12px;margin:0 auto}
-.col-lbl-box{background:var(--blue-dark);color:#fff;font-size:8px;padding:2px 4px;border-radius:0 0 4px 4px;font-weight:500}
-.quality-check-row{display:flex;align-items:center;gap:7px;background:var(--gray-1);border-radius:4px;padding:5px 8px;margin-top:7px;font-size:9px}
-.qc-icon{font-size:15px}
-.qc-title{font-weight:700;color:var(--blue-dark);font-size:9.5px}
-.qc-val{color:var(--gray-5)}
+.col-bar{width:52px;height:40px;border-radius:4px 4px 0 0;display:flex;align-items:center;justify-content:center;background:var(--gray-2);border:1px solid var(--gray-3);border-bottom:none;color:var(--ink);font-weight:400;font-size:12px;margin:0 auto}
+.col-lbl-box{background:var(--gray-1);border:1px solid var(--gray-3);color:var(--ink-soft);font-size:8px;padding:2px 4px;border-radius:0 0 4px 4px;font-weight:400}
+.quality-check-row{margin-top:7px}
 
 /* שכבת התמונה — ל-iOS, שם התכונה download לא נתמכת */
 .img-overlay{position:fixed;inset:0;z-index:10000;background:rgba(5,35,60,.94);display:flex;flex-direction:column}
@@ -237,7 +248,7 @@ var DEF_LABELS = {
   alert_icon_label:"מערכת מזוט",
   lbl_bacham:"בחמר",lbl_tea_cur:"תא נוכחי",lbl_tea_next:"תא הבא",
   lbl_gssp_badge:"GSSP",lbl_haz_prefix:"הזנות",lbl_achs:"אחסון",
-  lbl_storage_suffix:", SSP, AB",lbl_707:"707",lbl_706:"706",lbl_spill_prefix:"⚖️ #",
+  lbl_storage_suffix:", SSP, AB",lbl_707:"707",lbl_706:"706",lbl_spill_prefix:"#",
   lbl_ssp_params_title:"פרמטרים של הזנה",
   lbl_acid:"חומצה",lbl_bromine:"ברומין",lbl_water:"מים",lbl_gypsum:"גופרתית",lbl_throughput:"טון/שעה",
   lbl_special:"הנחיות מיוחדות",lbl_aging_prefix:"גישים (עקב 618)",lbl_mezz_prefix:"מצקלון 178",
@@ -347,21 +358,21 @@ function generate(){
   // GSSP
   h+="<div class='ig-card'><div class='ig-card-header'>"+esc(D.gssp_card_title)+"</div><div class='ig-card-body'>";
   h+="<div class='info-row'><div class='info-item'><div class='lbl'>"+esc(L.lbl_bacham)+"</div><div class='val'>"+esc(L.lbl_gssp_badge)+" "+esc(D.gssp_fuel)+"</div></div><div class='info-item'><div class='lbl'>"+esc(L.lbl_tea_cur)+"</div><div class='val'>"+esc(D.gssp_tea_cur)+"</div></div><div class='info-item'><div class='lbl'>"+esc(L.lbl_tea_next)+"</div><div class='val'>"+esc(D.gssp_tea_next)+"</div></div></div>";
-  h+="<div class='arrow-row'><span class='gssp-badge'>"+esc(L.lbl_gssp_badge)+"</span><span class='arrow-icon'>→</span><span style='font-size:9px;color:var(--text,#1f2a37)'>"+esc(D.gssp_range)+"</span></div>";
+  h+="<div class='arrow-row'><span class='gssp-badge'>"+esc(L.lbl_gssp_badge)+"</span><span class='arrow-icon'>→</span><span style='font-size:9px'>"+esc(D.gssp_range)+"</span></div>";
   h+="<div class='info-box'><div class='box-title'>"+esc(L.lbl_haz_prefix)+" "+esc(D.gssp_batch)+"</div><div><span class='lbl'>"+esc(L.lbl_achs)+": </span>"+esc(D.gssp_storage)+esc(L.lbl_storage_suffix)+"</div><div><span class='lbl'>"+esc(L.lbl_707)+": </span>"+esc(D.gssp_707)+"</div><div><span class='lbl'>"+esc(L.lbl_706)+": </span>"+esc(D.gssp_706)+"</div></div>";
   h+="<div class='warn-strip'>"+esc(L.lbl_spill_prefix)+" "+esc(D.gssp_spill)+"</div>";
   h+="</div></div>";
   // SSP
   h+="<div class='ig-card'><div class='ig-card-header'>"+esc(D.ssp_card_title)+"</div><div class='ig-card-body'>";
-  h+="<div style='font-weight:700;font-size:9.5px;margin-bottom:6px;color:var(--blue-mid)'>"+esc(L.lbl_ssp_params_title)+"</div>";
+  h+="<div class='sub-title'>"+esc(L.lbl_ssp_params_title)+"</div>";
   h+="<div class='params-row'>";
-  h+="<div class='param-box'><div class='p-icon'>🧪</div><div class='p-lbl'>"+esc(L.lbl_acid)+"</div><div class='p-val'>"+esc(D.ssp_sulfuric)+"</div></div>";
-  h+="<div class='param-box'><div class='p-icon'>🔵</div><div class='p-lbl'>"+esc(L.lbl_bromine)+"</div><div class='p-val'>"+esc(D.ssp_bromine)+"</div></div>";
-  h+="<div class='param-box'><div class='p-icon'>💧</div><div class='p-lbl'>"+esc(L.lbl_water)+"</div><div class='p-val'>"+esc(D.ssp_water)+"</div></div>";
-  h+="<div class='param-box'><div class='p-icon'>🪨</div><div class='p-lbl'>"+esc(L.lbl_gypsum)+"</div><div class='p-val'>"+esc(D.ssp_gypsum)+"</div></div>";
-  h+="<div class='param-box'><div class='p-icon'>⚙️</div><div class='p-lbl'>"+esc(L.lbl_throughput)+"</div><div class='p-val'>"+esc(D.ssp_throughput)+"</div></div>";
+  h+="<div class='param-box'><div class='p-lbl'>"+esc(L.lbl_acid)+"</div><div class='p-val'>"+esc(D.ssp_sulfuric)+"</div></div>";
+  h+="<div class='param-box'><div class='p-lbl'>"+esc(L.lbl_bromine)+"</div><div class='p-val'>"+esc(D.ssp_bromine)+"</div></div>";
+  h+="<div class='param-box'><div class='p-lbl'>"+esc(L.lbl_water)+"</div><div class='p-val'>"+esc(D.ssp_water)+"</div></div>";
+  h+="<div class='param-box'><div class='p-lbl'>"+esc(L.lbl_gypsum)+"</div><div class='p-val'>"+esc(D.ssp_gypsum)+"</div></div>";
+  h+="<div class='param-box'><div class='p-lbl'>"+esc(L.lbl_throughput)+"</div><div class='p-val'>"+esc(D.ssp_throughput)+"</div></div>";
   h+="</div>";
-  h+="<div class='green-box'><div class='g-title'>"+esc(L.lbl_special)+"</div><div>## "+esc(D.ssp_acid_check)+"</div><div>## "+esc(L.lbl_aging_prefix)+": "+esc(D.ssp_aging)+"</div><div>## "+esc(L.lbl_mezz_prefix)+": "+esc(D.ssp_mezz)+"</div></div>";
+  h+="<div class='green-box'><div class='g-title'>"+esc(L.lbl_special)+"</div><div class='list-line'>• "+esc(D.ssp_acid_check)+"</div><div class='list-line'>• "+esc(L.lbl_aging_prefix)+": "+esc(D.ssp_aging)+"</div><div class='list-line'>• "+esc(L.lbl_mezz_prefix)+": "+esc(D.ssp_mezz)+"</div></div>";
   h+="</div></div>";
   // Quality
   h+="<div class='ig-card'><div class='ig-card-header'>"+esc(D.q_card_title)+"</div><div class='quality-split'>";
@@ -370,26 +381,26 @@ function generate(){
   h+="<div class='kv-row'><span class='k'>"+esc(L.lbl_total)+"</span><span class='v'>"+esc(D.q_total)+"</span></div>";
   h+="<div class='kv-row'><span class='k'>"+esc(L.lbl_humidity)+"</span><span class='v'>"+esc(D.q_humidity)+"</span></div>";
   h+="<div class='kv-row'><span class='k'>"+esc(L.lbl_recycling)+"</span><span class='v'>"+esc(D.q_recycling)+" "+esc(L.lbl_recycling_suffix)+"</span></div>";
-  if(isFine) h+="<div class='alert-strip'>🛑 "+esc(D.q_fine_note)+"</div>";
+  if(isFine) h+="<div class='alert-strip'>"+esc(D.q_fine_note)+"</div>";
   h+="</div>";
-  h+="<div class='ig-card-body'><div class='gauge-wrap'><svg width='64' height='36' viewBox='0 0 64 36'><path d='M6,32 A26,26 0 0,1 58,32' fill='none' stroke='#dbe6ef' stroke-width='8' stroke-linecap='round'/><path d='M6,32 A26,26 0 0,1 32,6' fill='none' stroke='#14a5a0' stroke-width='8' stroke-linecap='round'/><path d='M32,6 A26,26 0 0,1 50,11' fill='none' stroke='#f5d98b' stroke-width='8' stroke-linecap='round'/><path d='M50,11 A26,26 0 0,1 58,32' fill='none' stroke='#a5342c' stroke-width='8' stroke-linecap='round'/><line x1='32' y1='32' x2='46' y2='13' stroke='#05233c' stroke-width='2.5' stroke-linecap='round'/><circle cx='32' cy='32' r='3.5' fill='#05233c'/></svg><div class='gauge-lbl'>"+esc(L.lbl_factor_prefix)+": <span class='gauge-val'>"+esc(D.q_factor)+"</span></div></div>";
-  h+="<div class='fine-box'><div class='fb-title'>"+esc(L.lbl_fine_section)+"</div><div>"+esc(L.lbl_mist_target)+": "+esc(D.q_mist_target)+" &nbsp;|&nbsp; "+esc(L.lbl_mist_max)+": "+esc(D.q_mist_max)+"</div><div style='color:var(--gray-5);font-size:8px;margin-top:2px'>"+esc(D.q_mist_note)+"</div></div></div>";
+  h+="<div class='ig-card-body'><div class='gauge-wrap'><svg width='64' height='36' viewBox='0 0 64 36'><path d='M6,32 A26,26 0 0,1 58,32' fill='none' stroke='#e6ecf2' stroke-width='8' stroke-linecap='round'/><path d='M6,32 A26,26 0 0,1 32,6' fill='none' stroke='#c3ced8' stroke-width='8' stroke-linecap='round'/><path d='M32,6 A26,26 0 0,1 50,11' fill='none' stroke='#9aa7b3' stroke-width='8' stroke-linecap='round'/><path d='M50,11 A26,26 0 0,1 58,32' fill='none' stroke='#6b7783' stroke-width='8' stroke-linecap='round'/><line x1='32' y1='32' x2='46' y2='13' stroke='#1a1a1a' stroke-width='2.5' stroke-linecap='round'/><circle cx='32' cy='32' r='3.5' fill='#1a1a1a'/></svg><div class='gauge-lbl'>"+esc(L.lbl_factor_prefix)+": <span class='gauge-val'>"+esc(D.q_factor)+"</span></div></div>";
+  h+="<div class='fine-box'><div class='fb-title'>"+esc(L.lbl_fine_section)+"</div><div>"+esc(L.lbl_mist_target)+": "+esc(D.q_mist_target)+" &nbsp;|&nbsp; "+esc(L.lbl_mist_max)+": "+esc(D.q_mist_max)+"</div><div style='color:var(--ink-soft);font-size:8.5px;margin-top:2px'>"+esc(D.q_mist_note)+"</div></div></div>";
   h+="</div></div>";
   // Mgmt
   h+="<div class='ig-card'><div class='ig-card-header'>"+esc(D.mgmt_card_title)+"</div><div class='ig-card-body'>";
-  h+="<div style='font-size:13px;margin-bottom:6px;color:#1f2a37'>"+esc(D.mgmt_contact)+"</div>";
-  h+="<div class='status-pills'><span class='pill pill-green'>✅ "+esc(D.mgmt_high)+": "+esc(L.lbl_approve)+"</span><span class='pill pill-red'>🔴 &lt;"+esc(D.mgmt_low)+": "+esc(D.mgmt_close)+"</span></div>";
+  h+="<div style='font-size:9.5px;margin-bottom:7px'>"+esc(D.mgmt_contact)+"</div>";
+  h+="<div class='status-pills'><span class='pill'>"+esc(D.mgmt_high)+": "+esc(L.lbl_approve)+"</span><span class='pill pill-alert'>&lt;"+esc(D.mgmt_low)+": "+esc(D.mgmt_close)+"</span></div>";
   h+="<div class='columns-title'>"+esc(L.lbl_columns_title)+"</div>";
   h+="<div class='columns-row'>";
-  h+="<div class='col-item'><div class='col-bar' style='background:#0e5a8a'>"+esc(D.line1_val)+"</div><div class='col-lbl-box'>"+esc(D.line1_lbl)+"</div></div>";
-  h+="<div class='col-item'><div class='col-bar' style='background:#14a5a0'>"+esc(D.line2_val)+"</div><div class='col-lbl-box'>"+esc(D.line2_lbl)+"</div></div>";
-  h+="<div class='col-item'><div class='col-bar' style='background:#0b7ea3'>"+esc(D.line3_val)+"</div><div class='col-lbl-box'>"+esc(D.line3_lbl)+"</div></div>";
+  h+="<div class='col-item'><div class='col-bar'>"+esc(D.line1_val)+"</div><div class='col-lbl-box'>"+esc(D.line1_lbl)+"</div></div>";
+  h+="<div class='col-item'><div class='col-bar'>"+esc(D.line2_val)+"</div><div class='col-lbl-box'>"+esc(D.line2_lbl)+"</div></div>";
+  h+="<div class='col-item'><div class='col-bar'>"+esc(D.line3_val)+"</div><div class='col-lbl-box'>"+esc(D.line3_lbl)+"</div></div>";
   h+="</div>";
-  h+="<div class='quality-check-row'><span class='qc-icon'>⏱️</span><div><div class='qc-title'>"+esc(D.qc_title)+"</div><div class='qc-val'>"+esc(D.qc_val)+"</div></div></div>";
+  h+="<div class='quality-check-row'><div><div class='qc-title'>"+esc(D.qc_title)+"</div><div class='qc-val'>"+esc(D.qc_val)+"</div></div></div>";
   h+="</div></div>";
   h+="</div>";
   // ההערה הכללית יורדת לתחתית הדף, מתחת לפרמטרי איכות ולמפלס 959
-  h+="<div class='ig-alert'><div class='ig-alert-icon'>⚙️</div><div><div class='ig-alert-title'>"+esc(D.alertTitle)+"</div><div class='ig-alert-text'>"+esc(D.alertText)+"</div></div></div>";
+  h+="<div class='ig-alert'><div><div class='ig-alert-title'>"+esc(D.alertTitle)+"</div><div class='ig-alert-text'>"+esc(D.alertText)+"</div></div></div>";
   document.getElementById("infographic").innerHTML=h;
 }
 
@@ -457,40 +468,24 @@ async function loadFromSupabase(){
 
 // ── Download Image ────────────────────────────────
 // ── מסירת התמונה למשתמש ───────────────────────────
-// שלוש דרכים, לפי מה שהדפדפן תומך בו:
-// 1. Web Share — פותח ישירות את תפריט השיתוף של הטלפון (ומשם לווטסאפ)
-// 2. הורדה רגילה עם blob URL — דסקטופ ואנדרואיד
-// 3. הצגת התמונה על המסך ללחיצה ארוכה — ב-iOS התכונה download מתעלמים ממנה
+// הורדה ישירה של קובץ PNG, בלי תפריטים ובלי מסכים נוספים.
+// blob URL ולא data: — כתובת data של כמה מגה היא מה ששבר את זה קודם.
+// ספארי באייפון תומך ב-download מאז iOS 13, אז המסלול הזה טוב בכל המכשירים.
+// שכבת הלחיצה הארוכה נשארת רק כרשת ביטחון לדפדפנים עתיקים בלי download.
 async function deliverImage(blob,fname){
-  var file=new File([blob],fname,{type:"image/png"});
-
-  if(navigator.canShare && navigator.canShare({files:[file]})){
-    try{
-      await navigator.share({files:[file],title:fname});
-      showToast("✅ נשלח! 📲","#146b3a");
-      return;
-    }catch(e){
-      // המשתמש ביטל — לא צריך ליפול לחלופות
-      if(e && e.name==="AbortError"){showToast("השיתוף בוטל","#7a8a9a");return;}
-      // NotAllowedError וכו' — ממשיכים לחלופה הבאה
-    }
-  }
-
   var url=URL.createObjectURL(blob);
   var a=document.createElement("a");
-  if("download" in a && !isIOS()){
-    a.download=fname;a.href=url;
-    document.body.appendChild(a);a.click();document.body.removeChild(a);
-    setTimeout(function(){URL.revokeObjectURL(url);},60000);
-    showToast("✅ התמונה הורדה! שלח בווטסאפ 📲","#14a5a0");
-    return;
-  }
-  showImageOverlay(url,fname);
-}
 
-function isIOS(){
-  return /iPad|iPhone|iPod/.test(navigator.userAgent)
-    || (navigator.platform==="MacIntel" && navigator.maxTouchPoints>1);
+  if(!("download" in a)){ showImageOverlay(url,fname); return; }
+
+  a.download=fname;
+  a.href=url;
+  a.rel="noopener";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(function(){URL.revokeObjectURL(url);},60000);
+  showToast("✅ הקובץ ירד! שלח בווטסאפ 📲","#14a5a0");
 }
 
 function showImageOverlay(url,fname){
