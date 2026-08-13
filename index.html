@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מחולל הנחיות ייצור יומיות</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue-dark:#0f2d5a;--blue-mid:#1a4f8a;--blue-acc:#2176c7;
+  --amber:#f59e0b;--green:#15803d;--red:#b91c1c;
+  --gray-1:#f8f9fa;--gray-2:#e9ecef;--gray-3:#ced4da;--gray-5:#6c757d;
+  --border:1px solid var(--gray-3);--radius:6px;--font:'Heebo',Arial,sans-serif;
+}
+html,body{font-family:var(--font);background:#fff;color:#1a1a2e}
+
+@media screen{
+  .screen-wrapper{display:flex;min-height:100vh;background:#f0f4f8}
+  .sidebar{width:280px;flex-shrink:0;background:var(--blue-dark);color:#e2e8f0;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+  .sidebar-header{padding:20px 16px 14px;border-bottom:1px solid rgba(255,255,255,0.1)}
+  .sidebar-header h1{font-size:15px;font-weight:700;color:#fff;line-height:1.3;margin-bottom:3px}
+  .sidebar-header p{font-size:10px;color:#94a3b8;font-weight:300}
+  .tab-nav{display:flex;flex-direction:column;padding:10px 10px 0;gap:2px}
+  .tab-btn{background:none;border:none;color:#94a3b8;font-family:var(--font);font-size:12px;padding:8px 12px;border-radius:var(--radius);cursor:pointer;text-align:right;transition:all .15s;font-weight:400}
+  .tab-btn:hover{background:rgba(255,255,255,0.07);color:#e2e8f0}
+  .tab-btn.active{background:var(--blue-acc);color:#fff;font-weight:700}
+  .fields-panel{flex:1;padding:12px 12px 8px;overflow-y:auto}
+  .field-group{margin-bottom:10px}
+  .field-group label{display:block;font-size:10px;color:#94a3b8;margin-bottom:3px;font-weight:500;letter-spacing:.03em}
+  .field-group input,.field-group textarea{width:100%;padding:6px 8px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:4px;color:#e2e8f0;font-family:var(--font);font-size:11px;direction:rtl;transition:border-color .15s}
+  .field-group input:focus,.field-group textarea:focus{outline:none;border-color:var(--blue-acc);background:rgba(255,255,255,0.1)}
+  .field-group textarea{resize:vertical;min-height:44px}
+  .section-divider{font-size:9px;font-weight:700;color:var(--blue-acc);letter-spacing:.1em;text-transform:uppercase;padding:8px 0 4px;border-bottom:1px solid rgba(255,255,255,0.08);margin-bottom:8px}
+  .sidebar-footer{padding:12px;border-top:1px solid rgba(255,255,255,0.1);display:flex;flex-direction:column;gap:6px}
+  .btn-generate{background:var(--blue-acc);color:#fff;border:none;border-radius:var(--radius);padding:10px;font-family:var(--font);font-weight:700;font-size:13px;cursor:pointer;width:100%}
+  .btn-generate:hover{background:#1a6bb5}
+  .btn-save{background:#0c2340;border:1px solid #2176c7;color:#93c5fd;border-radius:var(--radius);padding:10px;font-family:var(--font);font-weight:700;font-size:13px;cursor:pointer;width:100%}
+  .btn-save:hover{background:#1a4f8a;color:#fff}
+  .btn-print{background:var(--green);color:#fff;border:none;border-radius:var(--radius);padding:10px;font-family:var(--font);font-weight:700;font-size:13px;cursor:pointer;width:100%}
+  .btn-print:hover{background:#166534}
+  .btn-img{background:#7c3aed;color:#fff;border:none;border-radius:var(--radius);padding:10px;font-family:var(--font);font-weight:700;font-size:13px;cursor:pointer;width:100%}
+  .btn-img:hover{background:#6d28d9}
+  .btn-reset{background:none;color:#64748b;border:1px solid rgba(255,255,255,0.1);border-radius:var(--radius);padding:7px;font-family:var(--font);font-size:11px;cursor:pointer;width:100%}
+  .btn-reset:hover{color:#e2e8f0}
+  #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(10px);background:#1a4f8a;color:white;padding:10px 22px;border-radius:20px;font-size:13px;font-family:var(--font);font-weight:500;opacity:0;transition:opacity .3s,transform .3s;z-index:9999;pointer-events:none;white-space:nowrap}
+  .main-area{flex:1;padding:24px;display:flex;align-items:flex-start;justify-content:center;overflow-x:auto}
+}
+
+/* Mobile */
+@media screen and (max-width:768px){
+  .screen-wrapper{flex-direction:column;background:#0f2d5a}
+  .sidebar{width:100%!important;height:auto!important;position:static!important;overflow-y:visible!important}
+  .sidebar-header{padding:14px 16px 10px}
+  .tab-nav{flex-direction:row!important;overflow-x:auto;padding:8px 8px 0;gap:4px;scrollbar-width:none}
+  .tab-nav::-webkit-scrollbar{display:none}
+  .tab-btn{flex-shrink:0;font-size:11px;padding:7px 10px;white-space:nowrap}
+  .fields-panel{max-height:280px;overflow-y:auto;padding:10px 12px}
+  .sidebar-footer{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:10px 12px}
+  .sidebar-footer #last-saved{grid-column:1/-1;text-align:center;font-size:10px;color:#64748b}
+  .btn-generate,.btn-save,.btn-print,.btn-img{font-size:12px;padding:9px 6px}
+  .btn-reset{grid-column:1/-1;font-size:11px;padding:7px}
+  .main-area{padding:12px 8px 24px;justify-content:flex-start;background:#f0f4f8;overflow-x:auto}
+  .infographic{width:900px}
+}
+
+/* ── Infographic — גודל פלט קבוע 900px ──────────── */
+.infographic{width:900px;background:#fff;font-family:var(--font);direction:rtl}
+
+/* דסקטופ — הגדלה ויזואלית בלבד, לא משפיע על פלט */
+@media screen and (min-width:769px){
+  .infographic-scaler{
+    zoom:1.3;
+    display:inline-block;
+  }
+}
+
+/* מובייל — כיווץ לרוחב המסך (JS מחשב את ה-scale) */
+@media screen and (max-width:768px){
+  .infographic-scaler{
+    display:block;
+    width:100%;
+    overflow:hidden;
+  }
+  .infographic{
+    transform-origin:top right;
+  }
+}
+
+.ig-header{background:var(--blue-dark);color:#fff;display:flex;justify-content:space-between;align-items:center;padding:10px 16px;margin-bottom:6px}
+.ig-header-title{font-size:17px;font-weight:900;letter-spacing:-.3px}
+.ig-header-sub{font-size:12px;font-weight:300;opacity:.8;margin-top:1px}
+.ig-header-date{font-size:12px;opacity:.75;font-weight:300}
+.ig-alert{background:#fffbeb;border:2px solid var(--amber);border-radius:var(--radius);padding:8px 12px;margin-bottom:6px;display:flex;gap:10px;align-items:flex-start}
+.ig-alert-icon{font-size:18px;flex-shrink:0;line-height:1}
+.ig-alert-title{font-weight:700;font-size:11px;color:#92400e;margin-bottom:2px}
+.ig-alert-text{font-size:10px;color:#78350f;line-height:1.4}
+.ig-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.ig-card{background:#fff;border:var(--border);border-radius:var(--radius);overflow:hidden}
+.ig-card-header{background:var(--blue-mid);color:#fff;font-size:10.5px;font-weight:700;padding:5px 10px;letter-spacing:.02em}
+.ig-card-body{padding:8px 10px;font-size:9.5px}
+.info-row{display:flex;gap:16px;margin-bottom:6px;flex-wrap:wrap}
+.info-item .lbl{color:var(--gray-5);font-size:9px;font-weight:400}
+.info-item .val{font-weight:700;font-size:10.5px;color:var(--blue-dark)}
+.arrow-row{display:flex;align-items:center;gap:8px;background:var(--gray-1);border-radius:4px;padding:4px 8px;margin-bottom:6px;font-size:9px}
+.gssp-badge{background:#d1fae5;border:1px solid #6ee7b7;border-radius:4px;padding:2px 7px;font-weight:700;font-size:9px;color:#065f46}
+.arrow-icon{color:var(--blue-mid);font-size:16px;font-weight:700}
+.info-box{background:#eff6ff;border:1px solid #bfdbfe;border-radius:4px;padding:6px 8px;margin-bottom:5px;font-size:9px;line-height:1.6}
+.info-box .box-title{font-weight:700;font-size:10px;color:var(--blue-dark);margin-bottom:3px}
+.info-box .lbl{color:var(--gray-5)}
+.warn-strip{background:#fefce8;border:1px solid #fde047;border-radius:4px;padding:4px 8px;font-size:9px;font-weight:700;color:#713f12}
+.params-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:7px}
+.param-box{text-align:center;background:var(--gray-1);border:var(--border);border-radius:4px;padding:5px 6px;min-width:56px;flex:1}
+.param-box .p-icon{font-size:14px;line-height:1;margin-bottom:2px}
+.param-box .p-lbl{font-size:7.5px;color:var(--gray-5)}
+.param-box .p-val{font-weight:700;font-size:10px;color:var(--blue-dark)}
+.green-box{background:#f0fdf4;border:1px solid #86efac;border-radius:4px;padding:6px 8px;font-size:9px;line-height:1.7}
+.green-box .g-title{font-weight:700;font-size:10px;color:var(--green);margin-bottom:3px}
+.quality-split{display:grid;grid-template-columns:1fr 1fr}
+.quality-split>div:first-child{border-left:var(--border)}
+.kv-row{display:flex;justify-content:space-between;align-items:baseline;padding:3px 0;border-bottom:1px solid #f1f5f9;font-size:9.5px}
+.kv-row:last-child{border-bottom:none}
+.kv-row .k{color:var(--gray-5)}
+.kv-row .v{font-weight:700;color:var(--blue-dark)}
+.alert-strip{background:#fef2f2;border:1px solid #fca5a5;border-radius:4px;padding:4px 7px;margin-top:5px;font-size:8.5px;font-weight:700;color:var(--red)}
+.gauge-wrap{text-align:center;margin-bottom:6px}
+.gauge-lbl{font-size:8.5px;color:var(--gray-5);margin-top:2px}
+.gauge-val{font-weight:700;color:var(--red)}
+.fine-box{background:var(--gray-1);border:var(--border);border-radius:4px;padding:5px 7px;font-size:8.5px;line-height:1.6}
+.fine-box .fb-title{font-weight:700;font-size:9.5px;margin-bottom:2px;color:var(--blue-dark)}
+.status-pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:7px}
+.pill{border-radius:20px;padding:3px 10px;font-size:9px;font-weight:700}
+.pill-green{background:#f0fdf4;border:1px solid #86efac;color:#166534}
+.pill-red{background:#fef2f2;border:1px solid #fca5a5;color:var(--red)}
+.columns-title{font-size:9.5px;font-weight:700;color:var(--blue-dark);border-top:var(--border);padding-top:7px;margin-top:4px;margin-bottom:8px}
+.columns-row{display:flex;gap:8px;justify-content:space-around}
+.col-item{text-align:center}
+.col-bar{width:52px;height:40px;border-radius:6px 6px 0 0;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:12px;margin:0 auto}
+.col-lbl-box{background:var(--blue-dark);color:#fff;font-size:8px;padding:2px 4px;border-radius:0 0 4px 4px;font-weight:500}
+.quality-check-row{display:flex;align-items:center;gap:7px;background:var(--gray-1);border-radius:4px;padding:5px 8px;margin-top:7px;font-size:9px}
+.qc-icon{font-size:15px}
+.qc-title{font-weight:700;color:var(--blue-dark);font-size:9.5px}
+.qc-val{color:var(--gray-5)}
+
+/* Print */
+@media print{
+  @page{size:A4 landscape;margin:6mm}
+  html,body{background:#fff!important;margin:0!important;padding:0!important}
+  .screen-wrapper{display:block!important}
+  .sidebar{display:none!important}
+  .main-area{display:block!important;padding:0!important}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+}
+</style>
+</head>
+<body>
+<div class="screen-wrapper">
+<div id="toast"></div>
+
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <h1>🏭 מחולל הנחיות ייצור</h1>
+    <p>ערוך שדות ← לחץ הפק ← הדפס</p>
+  </div>
+  <nav class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('general',this)">📋 כללי</button>
+    <button class="tab-btn" onclick="switchTab('gssp',this)">🔵 GSSP הזנה</button>
+    <button class="tab-btn" onclick="switchTab('quality',this)">📊 GSSP איכות</button>
+    <button class="tab-btn" onclick="switchTab('ssp',this)">🟢 SSP</button>
+    <button class="tab-btn" onclick="switchTab('mgmt',this)">⚙️ ניהול</button>
+    <button class="tab-btn" onclick="switchTab('labels',this)">🏷️ כותרות</button>
+  </nav>
+  <div class="fields-panel" id="fields-panel"></div>
+  <div class="sidebar-footer">
+    <div id="last-saved" style="font-size:10px;color:#64748b;text-align:center;margin-bottom:4px">טוען...</div>
+    <button class="btn-generate" onclick="generate()">📊 הפק אינפוגרפיקה</button>
+    <button id="btn-save" class="btn-save" onclick="saveToSupabase()">💾 שמור הנחיות</button>
+    <button class="btn-print" onclick="window.print()">🖨️ הדפס / שמור PDF</button>
+    <button id="btn-img" class="btn-img" onclick="downloadImage()">📸 הורד תמונה לווטסאפ</button>
+    <button class="btn-reset" onclick="resetData()">🔄 איפוס לברירת מחדל</button>
+  </div>
+</aside>
+
+<main class="main-area">
+  <div class="infographic-scaler">
+    <div class="infographic" id="infographic"></div>
+  </div>
+</main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+// ── Default Data ──────────────────────────────────
+var DEF = {
+  date:"11 באפריל 2026",subtitle:"מתקנים 41 + 42",
+  alertTitle:"מערכת מזוט",
+  alertText:"יש להגביר סיורים סביב מערכת המזוט, הפורקים, המחממים, הפורקים, המחממים והמשאבות ולדווח על כל ממצא חריג!",
+  gssp_card_title:"הנחיות למשך ייצור (מתקן 42) - GSSP",
+  gssp_fuel:"ברזיל",gssp_tea_cur:"N-22",gssp_tea_next:"N-23",
+  gssp_batch:"42 (ישירה)",gssp_storage:"709/710",gssp_range:"15-20 טון",
+  gssp_707:"15 טון, MAX שפיכות GSSP S12 צד ימינה",
+  gssp_706:"8 טון, שפיכות טריוספוס S7 (הזנה רציפה במקום חומצה)",
+  gssp_spill:"יש לעדכין הזנות שפיכות על אבקי",
+  q_card_title:"פרמטרים לאיכות",
+  q_retention:"41-1",q_total:"21.1",q_humidity:"11-12%",q_recycling:"80-120",
+  q_factor:"15.5 – 16.5",q_fine_rate:"4.9%",q_fine_note:"עמד 4.9% דקים – עצור מתקן ולקות נפות!",
+  q_mist_target:"2.5%",q_mist_max:"4%",q_mist_note:"גירוון גז, נקה נפות בעצירה",
+  ssp_card_title:"הנחיות לייצור (מתקן 41) SSP - (ME)",
+  ssp_acid_check:"בדיקת 100: כל ארבע שעות",
+  ssp_aging:"הוצא עגלה ופתח כלפה כל 2 שעות",
+  ssp_mezz:"אל תמשור 7 – אל אם <50%. עדיפות למצקלון 177",
+  ssp_sulfuric:"0.03",ssp_bromine:"0",ssp_water:"0.08",ssp_gypsum:"0.42:75",ssp_throughput:"40",
+  mgmt_card_title:"ניהול מפלס 959",
+  mgmt_contact:"צור קשר עם מנהל, אישור הזרמה ל-30",
+  mgmt_high:"85%",mgmt_low:"60%",mgmt_close:"סגור ברד ל-30 לאלתר!",
+  line1_lbl:"ליין 1",line1_val:"3 קוב",
+  line2_lbl:"ליין 2",line2_val:"4 קוב",
+  line3_lbl:"ליין 3",line3_val:"4 קוב",
+  qc_title:"בדיקות איכות",qc_val:"בדיקת 100: כל ארבע שעות",
+};
+
+var DEF_LABELS = {
+  main_title:"הנחיות ייצור יומיות",lbl_date_prefix:"תאריך",
+  alert_icon_label:"מערכת מזוט",
+  lbl_bacham:"בחמר",lbl_tea_cur:"תא נוכחי",lbl_tea_next:"תא הבא",
+  lbl_gssp_badge:"GSSP",lbl_haz_prefix:"הזנות",lbl_achs:"אחסון",
+  lbl_storage_suffix:", SSP, AB",lbl_707:"707",lbl_706:"706",lbl_spill_prefix:"⚖️ #",
+  lbl_ssp_params_title:"פרמטרים של הזנה",
+  lbl_acid:"חומצה",lbl_bromine:"ברומין",lbl_water:"מים",lbl_gypsum:"גופרתית",lbl_throughput:"טון/שעה",
+  lbl_special:"הנחיות מיוחדות",lbl_aging_prefix:"גישים (עקב 618)",lbl_mezz_prefix:"מצקלון 178",
+  lbl_retention:"רטיבות ב-1",lbl_total:"טוטאל",lbl_humidity:"לחות",
+  lbl_recycling:"עומס חזרה",lbl_recycling_suffix:"טון/שעה",lbl_factor_prefix:"פקטור",
+  lbl_fine_section:"מיון דקים",lbl_mist_target:"מטרה",lbl_mist_max:"מקסימום",
+  lbl_approve:"אישור",lbl_close_action:"סגירה",
+  lbl_columns_title:"השלמה לעמודות (ממוצע 4 שעות)",
+};
+
+var D = JSON.parse(JSON.stringify(DEF));
+var L = JSON.parse(JSON.stringify(DEF_LABELS));
+
+// ── Tab fields ────────────────────────────────────
+var TABS = {
+  general:[
+    {k:"date",l:"תאריך"},{k:"subtitle",l:"כותרת משנה"},{k:"alertTitle",l:"כותרת התראה"},{k:"alertText",l:"טקסט התראה",ml:true}
+  ],
+  gssp:[
+    {k:"gssp_card_title",l:"כותרת כרטיסייה",ml:true},{sec:"פרטי הזנה"},
+    {k:"gssp_fuel",l:"סוג חמר"},{k:"gssp_tea_cur",l:"תא נוכחי"},{k:"gssp_tea_next",l:"תא הבא"},
+    {k:"gssp_batch",l:"אצווה"},{k:"gssp_storage",l:"אחסון"},{k:"gssp_range",l:"כמות חץ"},
+    {sec:"הנחיות"},{k:"gssp_707",l:"707",ml:true},{k:"gssp_706",l:"706",ml:true},{k:"gssp_spill",l:"הערת שפיכות",ml:true}
+  ],
+  quality:[
+    {k:"q_card_title",l:"כותרת כרטיסייה"},{sec:"פרמטרי איכות"},
+    {k:"q_retention",l:"רטיבות ב-1"},{k:"q_total",l:"טוטאל"},{k:"q_humidity",l:"לחות (%)"},
+    {k:"q_recycling",l:"עומס חזרה"},{k:"q_factor",l:"פקטור"},
+    {sec:"מיון דקים"},{k:"q_fine_rate",l:"% דקים"},{k:"q_fine_note",l:"הערת דקים",ml:true},
+    {k:"q_mist_target",l:"מטרה"},{k:"q_mist_max",l:"מקסימום"},{k:"q_mist_note",l:"הערה"}
+  ],
+  ssp:[
+    {k:"ssp_card_title",l:"כותרת כרטיסייה",ml:true},{sec:"פרמטרי הזנה"},
+    {k:"ssp_sulfuric",l:"חומצה"},{k:"ssp_bromine",l:"ברומין"},{k:"ssp_water",l:"מים"},
+    {k:"ssp_gypsum",l:"גופרתית"},{k:"ssp_throughput",l:"טון/שעה"},
+    {sec:"הנחיות מיוחדות"},
+    {k:"ssp_acid_check",l:"בדיקת חומצה",ml:true},{k:"ssp_aging",l:"גישים",ml:true},{k:"ssp_mezz",l:"מצקלון 178",ml:true}
+  ],
+  mgmt:[
+    {k:"mgmt_card_title",l:"כותרת כרטיסייה"},{sec:"ניהול"},
+    {k:"mgmt_contact",l:"הנחיית קשר",ml:true},{k:"mgmt_high",l:"סף אישור"},{k:"mgmt_low",l:"סף סגירה"},{k:"mgmt_close",l:"הנחיית סגירה",ml:true},
+    {sec:"השלמה לעמודות"},
+    {k:"line1_lbl",l:"ליין 1 – שם"},{k:"line1_val",l:"ליין 1 – ערך"},
+    {k:"line2_lbl",l:"ליין 2 – שם"},{k:"line2_val",l:"ליין 2 – ערך"},
+    {k:"line3_lbl",l:"ליין 3 – שם"},{k:"line3_val",l:"ליין 3 – ערך"},
+    {sec:"בדיקות"},{k:"qc_title",l:"כותרת בדיקות"},{k:"qc_val",l:"תיאור"}
+  ],
+  labels:[
+    {sec:"כותרת ראשית"},{k:"main_title",l:"כותרת האינפוגרפיקה"},{k:"lbl_date_prefix",l:"תחילית תאריך"},
+    {sec:"סרגל התראה"},{k:"alert_icon_label",l:"כותרת ההתראה"},
+    {sec:"כרטיסיית GSSP"},
+    {k:"lbl_bacham",l:"תווית בחמר"},{k:"lbl_tea_cur",l:"תווית תא נוכחי"},{k:"lbl_tea_next",l:"תווית תא הבא"},
+    {k:"lbl_gssp_badge",l:"תג GSSP"},{k:"lbl_haz_prefix",l:"תחילית הזנות"},{k:"lbl_achs",l:"תווית אחסון"},
+    {k:"lbl_707",l:"תווית 707"},{k:"lbl_706",l:"תווית 706"},{k:"lbl_spill_prefix",l:"תחילית שפיכות"},
+    {sec:"כרטיסיית SSP"},
+    {k:"lbl_ssp_params_title",l:"כותרת פרמטרים"},{k:"lbl_acid",l:"תווית חומצה"},
+    {k:"lbl_bromine",l:"תווית ברומין"},{k:"lbl_water",l:"תווית מים"},
+    {k:"lbl_gypsum",l:"תווית גופרתית"},{k:"lbl_throughput",l:"תווית טון/שעה"},
+    {k:"lbl_special",l:"כותרת הנחיות מיוחדות"},{k:"lbl_aging_prefix",l:"תחילית גישים"},{k:"lbl_mezz_prefix",l:"תחילית מצקלון"},
+    {sec:"כרטיסיית איכות"},
+    {k:"lbl_retention",l:"תווית רטיבות"},{k:"lbl_total",l:"תווית טוטאל"},
+    {k:"lbl_humidity",l:"תווית לחות"},{k:"lbl_recycling",l:"תווית עומס חזרה"},
+    {k:"lbl_factor_prefix",l:"תווית פקטור"},{k:"lbl_fine_section",l:"כותרת מיון דקים"},
+    {k:"lbl_mist_target",l:"תווית מטרה"},{k:"lbl_mist_max",l:"תווית מקסימום"},
+    {sec:"כרטיסיית ניהול"},
+    {k:"lbl_approve",l:"תווית אישור"},{k:"lbl_close_action",l:"תווית סגירה"},{k:"lbl_columns_title",l:"כותרת עמודות"},
+  ]
+};
+
+var currentTab = "general";
+
+function esc(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+
+function switchTab(tab,btn){
+  currentTab=tab;
+  document.querySelectorAll(".tab-btn").forEach(function(b){b.classList.remove("active")});
+  btn.classList.add("active");
+  renderFields();
+}
+
+function renderFields(){
+  var isLbl = currentTab==="labels";
+  var fields = TABS[currentTab]||[];
+  var html="";
+  if(isLbl) html+="<div style='font-size:10px;color:#f59e0b;margin-bottom:8px;padding:5px 7px;background:rgba(245,158,11,0.1);border-radius:4px;border:1px solid rgba(245,158,11,0.3)'>✏️ שינויים נשמרים עם לחיצה על 💾</div>";
+  fields.forEach(function(f){
+    if(f.sec){html+="<div class='section-divider'>"+f.sec+"</div>";return;}
+    var src = isLbl ? L : D;
+    var val = (src[f.k]||"").toString().replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    var onInp = isLbl ? "L[this.dataset.k]=this.value;liveUpdate()" : "D[this.dataset.k]=this.value;liveUpdate()";
+    var borderStyle = isLbl ? "border-color:rgba(245,158,11,0.5)" : "";
+    html+="<div class='field-group'><label>"+f.l+"</label>";
+    if(f.ml) html+="<textarea data-k='"+f.k+"' oninput='"+onInp+"' style='"+borderStyle+"'>"+val+"</textarea>";
+    else html+="<input type='text' data-k='"+f.k+"' value='"+val+"' oninput='"+onInp+"' style='"+borderStyle+"'>";
+    html+="</div>";
+  });
+  document.getElementById("fields-panel").innerHTML=html;
+}
+
+function liveUpdate(){generate();}
+
+function generate(){
+  var isFine=parseFloat(D.q_fine_rate)>=4;
+  var h="";
+  h+="<div class='ig-header'><div><div class='ig-header-title'>"+esc(L.main_title)+"</div><div class='ig-header-sub'>"+esc(D.subtitle)+"</div></div><div class='ig-header-date'>"+esc(L.lbl_date_prefix)+": "+esc(D.date)+"</div></div>";
+  h+="<div class='ig-alert'><div class='ig-alert-icon'>⚙️</div><div><div class='ig-alert-title'>"+esc(D.alertTitle)+"</div><div class='ig-alert-text'>"+esc(D.alertText)+"</div></div></div>";
+  h+="<div class='ig-grid'>";
+  // GSSP
+  h+="<div class='ig-card'><div class='ig-card-header'>"+esc(D.gssp_card_title)+"</div><div class='ig-card-body'>";
+  h+="<div class='info-row'><div class='info-item'><div class='lbl'>"+esc(L.lbl_bacham)+"</div><div class='val'>"+esc(L.lbl_gssp_badge)+" "+esc(D.gssp_fuel)+"</div></div><div class='info-item'><div class='lbl'>"+esc(L.lbl_tea_cur)+"</div><div class='val'>"+esc(D.gssp_tea_cur)+"</div></div><div class='info-item'><div class='lbl'>"+esc(L.lbl_tea_next)+"</div><div class='val'>"+esc(D.gssp_tea_next)+"</div></div></div>";
+  h+="<div class='arrow-row'><span class='gssp-badge'>"+esc(L.lbl_gssp_badge)+"</span><span class='arrow-icon'>→</span><span style='font-size:9px;color:#374151'>"+esc(D.gssp_range)+"</span></div>";
+  h+="<div class='info-box'><div class='box-title'>"+esc(L.lbl_haz_prefix)+" "+esc(D.gssp_batch)+"</div><div><span class='lbl'>"+esc(L.lbl_achs)+": </span>"+esc(D.gssp_storage)+esc(L.lbl_storage_suffix)+"</div><div><span class='lbl'>"+esc(L.lbl_707)+": </span>"+esc(D.gssp_707)+"</div><div><span class='lbl'>"+esc(L.lbl_706)+": </span>"+esc(D.gssp_706)+"</div></div>";
+  h+="<div class='warn-strip'>"+esc(L.lbl_spill_prefix)+" "+esc(D.gssp_spill)+"</div>";
+  h+="</div></div>";
+  // SSP
+  h+="<div class='ig-card'><div class='ig-card-header'>"+esc(D.ssp_card_title)+"</div><div class='ig-card-body'>";
+  h+="<div style='font-weight:700;font-size:9.5px;margin-bottom:6px;color:#0f2d5a'>"+esc(L.lbl_ssp_params_title)+"</div>";
+  h+="<div class='params-row'>";
+  h+="<div class='param-box'><div class='p-icon'>🧪</div><div class='p-lbl'>"+esc(L.lbl_acid)+"</div><div class='p-val'>"+esc(D.ssp_sulfuric)+"</div></div>";
+  h+="<div class='param-box'><div class='p-icon'>🔵</div><div class='p-lbl'>"+esc(L.lbl_bromine)+"</div><div class='p-val'>"+esc(D.ssp_bromine)+"</div></div>";
+  h+="<div class='param-box'><div class='p-icon'>💧</div><div class='p-lbl'>"+esc(L.lbl_water)+"</div><div class='p-val'>"+esc(D.ssp_water)+"</div></div>";
+  h+="<div class='param-box'><div class='p-icon'>🪨</div><div class='p-lbl'>"+esc(L.lbl_gypsum)+"</div><div class='p-val'>"+esc(D.ssp_gypsum)+"</div></div>";
+  h+="<div class='param-box'><div class='p-icon'>⚙️</div><div class='p-lbl'>"+esc(L.lbl_throughput)+"</div><div class='p-val'>"+esc(D.ssp_throughput)+"</div></div>";
+  h+="</div>";
+  h+="<div class='green-box'><div class='g-title'>"+esc(L.lbl_special)+"</div><div>## "+esc(D.ssp_acid_check)+"</div><div>## "+esc(L.lbl_aging_prefix)+": "+esc(D.ssp_aging)+"</div><div>## "+esc(L.lbl_mezz_prefix)+": "+esc(D.ssp_mezz)+"</div></div>";
+  h+="</div></div>";
+  // Quality
+  h+="<div class='ig-card'><div class='ig-card-header'>"+esc(D.q_card_title)+"</div><div class='quality-split'>";
+  h+="<div class='ig-card-body'>";
+  h+="<div class='kv-row'><span class='k'>"+esc(L.lbl_retention)+"</span><span class='v'>"+esc(D.q_retention)+"</span></div>";
+  h+="<div class='kv-row'><span class='k'>"+esc(L.lbl_total)+"</span><span class='v'>"+esc(D.q_total)+"</span></div>";
+  h+="<div class='kv-row'><span class='k'>"+esc(L.lbl_humidity)+"</span><span class='v'>"+esc(D.q_humidity)+"</span></div>";
+  h+="<div class='kv-row'><span class='k'>"+esc(L.lbl_recycling)+"</span><span class='v'>"+esc(D.q_recycling)+" "+esc(L.lbl_recycling_suffix)+"</span></div>";
+  if(isFine) h+="<div class='alert-strip'>🛑 "+esc(D.q_fine_note)+"</div>";
+  h+="</div>";
+  h+="<div class='ig-card-body'><div class='gauge-wrap'><svg width='64' height='36' viewBox='0 0 64 36'><path d='M6,32 A26,26 0 0,1 58,32' fill='none' stroke='#e5e7eb' stroke-width='8' stroke-linecap='round'/><path d='M6,32 A26,26 0 0,1 32,6' fill='none' stroke='#22c55e' stroke-width='8' stroke-linecap='round'/><path d='M32,6 A26,26 0 0,1 50,11' fill='none' stroke='#eab308' stroke-width='8' stroke-linecap='round'/><path d='M50,11 A26,26 0 0,1 58,32' fill='none' stroke='#ef4444' stroke-width='8' stroke-linecap='round'/><line x1='32' y1='32' x2='46' y2='13' stroke='#0f2d5a' stroke-width='2.5' stroke-linecap='round'/><circle cx='32' cy='32' r='3.5' fill='#0f2d5a'/></svg><div class='gauge-lbl'>"+esc(L.lbl_factor_prefix)+": <span class='gauge-val'>"+esc(D.q_factor)+"</span></div></div>";
+  h+="<div class='fine-box'><div class='fb-title'>"+esc(L.lbl_fine_section)+"</div><div>"+esc(L.lbl_mist_target)+": "+esc(D.q_mist_target)+" &nbsp;|&nbsp; "+esc(L.lbl_mist_max)+": "+esc(D.q_mist_max)+"</div><div style='color:#6c757d;font-size:8px;margin-top:2px'>"+esc(D.q_mist_note)+"</div></div></div>";
+  h+="</div></div>";
+  // Mgmt
+  h+="<div class='ig-card'><div class='ig-card-header'>"+esc(D.mgmt_card_title)+"</div><div class='ig-card-body'>";
+  h+="<div style='font-size:13px;margin-bottom:6px;color:#374151'>"+esc(D.mgmt_contact)+"</div>";
+  h+="<div class='status-pills'><span class='pill pill-green'>✅ "+esc(D.mgmt_high)+": "+esc(L.lbl_approve)+"</span><span class='pill pill-red'>🔴 &lt;"+esc(D.mgmt_low)+": "+esc(D.mgmt_close)+"</span></div>";
+  h+="<div class='columns-title'>"+esc(L.lbl_columns_title)+"</div>";
+  h+="<div class='columns-row'>";
+  h+="<div class='col-item'><div class='col-bar' style='background:#60a5fa'>"+esc(D.line1_val)+"</div><div class='col-lbl-box'>"+esc(D.line1_lbl)+"</div></div>";
+  h+="<div class='col-item'><div class='col-bar' style='background:#34d399'>"+esc(D.line2_val)+"</div><div class='col-lbl-box'>"+esc(D.line2_lbl)+"</div></div>";
+  h+="<div class='col-item'><div class='col-bar' style='background:#34d399'>"+esc(D.line3_val)+"</div><div class='col-lbl-box'>"+esc(D.line3_lbl)+"</div></div>";
+  h+="</div>";
+  h+="<div class='quality-check-row'><span class='qc-icon'>⏱️</span><div><div class='qc-title'>"+esc(D.qc_title)+"</div><div class='qc-val'>"+esc(D.qc_val)+"</div></div></div>";
+  h+="</div></div>";
+  h+="</div>";
+  document.getElementById("infographic").innerHTML=h;
+}
+
+function resetData(){
+  D=JSON.parse(JSON.stringify(DEF));
+  L=JSON.parse(JSON.stringify(DEF_LABELS));
+  renderFields();generate();
+}
+
+// ── Supabase ──────────────────────────────────────
+var SUPA_URL="https://yvsewujwjqdzvjaeogss.supabase.co";
+var SUPA_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl2c2V3dWp3anFkenZqYWVvZ3NzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4MzU1MTMsImV4cCI6MjA5MTQxMTUxM30.6J6YDhKhyVdlrOEsb8vFALmWIlEI-176hjzNqiWUvlg";
+
+function showToast(msg,color){
+  var t=document.getElementById("toast");
+  if(!t)return;
+  t.textContent=msg;t.style.background=color||"#1a4f8a";
+  t.style.opacity="1";t.style.transform="translateY(0)";
+  setTimeout(function(){t.style.opacity="0";t.style.transform="translateY(10px)";},3000);
+}
+
+async function saveToSupabase(){
+  document.getElementById("btn-save").textContent="⏳ שומר...";
+  try{
+    var checkRes=await fetch(SUPA_URL+"/rest/v1/guidelines?id=eq.1",{headers:{"apikey":SUPA_KEY,"Authorization":"Bearer "+SUPA_KEY}});
+    if(!checkRes.ok) throw new Error("בדיקה נכשלה");
+    var existing=await checkRes.json();
+    var body=JSON.stringify({id:1,data:D,labels:L,updated_at:new Date().toISOString()});
+    var method=(existing&&existing.length>0)?"PATCH":"POST";
+    var url=SUPA_URL+"/rest/v1/guidelines"+(method==="PATCH"?"?id=eq.1":"");
+    var saveRes=await fetch(url,{method:method,headers:{"apikey":SUPA_KEY,"Authorization":"Bearer "+SUPA_KEY,"Content-Type":"application/json","Prefer":"return=minimal"},body:body});
+    if(!saveRes.ok) throw new Error("שמירה נכשלה: "+saveRes.status);
+    var now=new Date();
+    var ds=now.toLocaleDateString("he-IL")+" "+now.toLocaleTimeString("he-IL",{hour:"2-digit",minute:"2-digit"});
+    document.getElementById("last-saved").textContent="✅ נשמר: "+ds;
+    showToast("✅ ההנחיות נשמרו בהצלחה!","#15803d");
+  }catch(err){
+    showToast("❌ שגיאה בשמירה: "+err.message,"#b91c1c");
+    document.getElementById("last-saved").textContent="❌ שגיאת שמירה";
+  }
+  document.getElementById("btn-save").textContent="💾 שמור הנחיות";
+}
+
+async function loadFromSupabase(){
+  try{
+    var res=await fetch(SUPA_URL+"/rest/v1/guidelines?id=eq.1&select=data,labels,updated_at",{headers:{"apikey":SUPA_KEY,"Authorization":"Bearer "+SUPA_KEY}});
+    if(!res.ok) throw new Error("שגיאת שרת");
+    var rows=await res.json();
+    if(rows&&rows.length>0&&rows[0].data){
+      D=Object.assign({},DEF,rows[0].data);
+      if(rows[0].labels) L=Object.assign({},DEF_LABELS,rows[0].labels);
+      var ts=new Date(rows[0].updated_at);
+      var ds=ts.toLocaleDateString("he-IL")+" "+ts.toLocaleTimeString("he-IL",{hour:"2-digit",minute:"2-digit"});
+      document.getElementById("last-saved").textContent="עדכון אחרון: "+ds;
+      showToast("📥 נטענו ההנחיות האחרונות","#15803d");
+    }else{
+      document.getElementById("last-saved").textContent="ברירת מחדל";
+    }
+  }catch(err){
+    document.getElementById("last-saved").textContent="ברירת מחדל (אין חיבור)";
+  }
+  renderFields();
+  generate();
+}
+
+// ── Download Image ────────────────────────────────
+async function downloadImage(){
+  var btn=document.getElementById("btn-img");
+  btn.textContent="⏳ מייצר תמונה...";
+  btn.disabled=true;
+  try{
+    var el=document.getElementById("infographic");
+    var prevW=el.style.width,prevMW=el.style.minWidth;
+    // אפס zoom/transform זמנית לצילום נקי
+    var scaler=el.parentElement;
+    var prevZoom=scaler.style.zoom||"";
+    var prevTransform=el.style.transform||"";
+    var prevMargin=el.style.marginBottom||"";
+    scaler.style.zoom="1";
+    el.style.transform="none";
+    el.style.marginBottom="0";
+    el.style.width="900px";el.style.minWidth="900px";
+    await new Promise(function(r){setTimeout(r,150);});
+    var canvas=await html2canvas(el,{
+      scale:2,useCORS:true,allowTaint:true,
+      backgroundColor:"#ffffff",logging:false,
+      imageTimeout:0,removeContainer:true,
+      foreignObjectRendering:false,
+      scrollX:-window.scrollX,scrollY:-window.scrollY,
+      windowWidth:900,width:900,height:el.scrollHeight
+    });
+    el.style.width=prevW;el.style.minWidth=prevMW;
+    scaler.style.zoom=prevZoom;
+    el.style.transform=prevTransform;
+    el.style.marginBottom=prevMargin;
+    setMobileScale();
+    var link=document.createElement("a");
+    var ds=(D.date||"הנחיות").replace(/\s/g,"-");
+    link.download="הנחיות-ייצור-"+ds+".png";
+    link.href=canvas.toDataURL("image/png");
+    document.body.appendChild(link);link.click();document.body.removeChild(link);
+    showToast("✅ התמונה הורדה! שלח בווטסאפ 📲","#7c3aed");
+  }catch(err){
+    showToast("❌ שגיאה: "+err.message,"#b91c1c");
+  }
+  btn.textContent="📸 הורד תמונה לווטסאפ";
+  btn.disabled=false;
+}
+
+// ── Mobile scale ─────────────────────────────────
+function setMobileScale(){
+  if(window.innerWidth<=768){
+    var scale=window.innerWidth/900;
+    document.querySelector(".infographic").style.transform="scale("+scale+")";
+    document.querySelector(".infographic").style.marginBottom=((scale-1)*100)+"%";
+  } else {
+    var el=document.querySelector(".infographic");
+    if(el){el.style.transform="";el.style.marginBottom="";}
+  }
+}
+window.addEventListener("resize",setMobileScale);
+setMobileScale();
+
+// ── Init ──────────────────────────────────────────
+renderFields();
+generate();
+loadFromSupabase();
+</script>
+</body>
+</html>

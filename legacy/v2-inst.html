@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<!-- saved from url=(0054)file:///Users/mosheheinic/Downloads/Final-final_1.html -->
+<html lang="he" dir="rtl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מחולל הנחיות ייצור יומיות</title>
+<link href="./inst2_files/css2" rel="stylesheet">
+<style>
+/* ── Reset & Base ─────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --blue-dark: #0f2d5a;
+  --blue-mid:  #1a4f8a;
+  --blue-acc:  #2176c7;
+  --amber:     #f59e0b;
+  --green:     #15803d;
+  --red:       #b91c1c;
+  --gray-1:    #f8f9fa;
+  --gray-2:    #e9ecef;
+  --gray-3:    #ced4da;
+  --gray-5:    #6c757d;
+  --border:    1px solid var(--gray-3);
+  --radius:    6px;
+  --font:      'Heebo', sans-serif;
+}
+html, body { font-family: var(--font); background: #fff; color: #1a1a2e; }
+
+/* ── Screen layout ────────────────────────────── */
+@media screen {
+  .screen-wrapper {
+    display: flex;
+    min-height: 100vh;
+    background: #f0f4f8;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    width: 280px;
+    flex-shrink: 0;
+    background: var(--blue-dark);
+    color: #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+  .sidebar-header {
+    padding: 20px 16px 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  .sidebar-header h1 {
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.3;
+    margin-bottom: 3px;
+  }
+  .sidebar-header p {
+    font-size: 10px;
+    color: #94a3b8;
+    font-weight: 300;
+  }
+
+  /* Tab nav */
+  .tab-nav {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 10px 0;
+    gap: 2px;
+  }
+  .tab-btn {
+    background: none;
+    border: none;
+    color: #94a3b8;
+    font-family: var(--font);
+    font-size: 12px;
+    padding: 8px 12px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    text-align: right;
+    transition: all .15s;
+    font-weight: 400;
+  }
+  .tab-btn:hover { background: rgba(255,255,255,0.07); color: #e2e8f0; }
+  .tab-btn.active { background: var(--blue-acc); color: #fff; font-weight: 700; }
+
+  /* Fields panel */
+  .fields-panel {
+    flex: 1;
+    padding: 12px 12px 8px;
+    overflow-y: auto;
+  }
+  .field-group { margin-bottom: 10px; }
+  .field-group label {
+    display: block;
+    font-size: 10px;
+    color: #94a3b8;
+    margin-bottom: 3px;
+    font-weight: 500;
+    letter-spacing: .03em;
+  }
+  .field-group input,
+  .field-group textarea {
+    width: 100%;
+    padding: 6px 8px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 4px;
+    color: #e2e8f0;
+    font-family: var(--font);
+    font-size: 11px;
+    direction: rtl;
+    transition: border-color .15s;
+  }
+  .field-group input:focus,
+  .field-group textarea:focus {
+    outline: none;
+    border-color: var(--blue-acc);
+    background: rgba(255,255,255,0.1);
+  }
+  .field-group textarea { resize: vertical; min-height: 44px; }
+  .section-divider {
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--blue-acc);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: 8px 0 4px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    margin-bottom: 8px;
+  }
+
+  /* Sidebar footer */
+  .sidebar-footer {
+    padding: 12px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .btn-generate {
+    background: var(--blue-acc);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius);
+    padding: 10px;
+    font-family: var(--font);
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all .15s;
+    width: 100%;
+  }
+  .btn-generate:hover { background: #1a6bb5; }
+  .btn-print {
+    background: var(--green);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius);
+    padding: 10px;
+    font-family: var(--font);
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all .15s;
+    width: 100%;
+  }
+  .btn-print:hover { background: #166534; }
+  .btn-reset {
+    background: none;
+    color: #64748b;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--radius);
+    padding: 7px;
+    font-family: var(--font);
+    font-size: 11px;
+    cursor: pointer;
+    width: 100%;
+  }
+  .btn-reset:hover { color: #e2e8f0; }
+  .btn-save {
+    background: #0c2340;
+    border: 1px solid #2176c7;
+    color: #93c5fd;
+    border-radius: var(--radius);
+    padding: 10px;
+    font-family: var(--font);
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all .15s;
+    width: 100%;
+  }
+  .btn-save:hover { background: #1a4f8a; color: #fff; }
+  .btn-img {
+    background: #7c3aed;
+    color: #fff;
+    border: none;
+    border-radius: var(--radius);
+    padding: 10px;
+    font-family: var(--font);
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all .15s;
+    width: 100%;
+  }
+  .btn-img:hover { background: #6d28d9; }
+  #toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background: #1a4f8a;
+    color: white;
+    padding: 10px 22px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-family: var(--font);
+    font-weight: 500;
+    opacity: 0;
+    transition: opacity .3s, transform .3s;
+    z-index: 9999;
+    pointer-events: none;
+  }
+
+  /* Main preview area */
+  .main-area {
+    flex: 1;
+    padding: 24px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    overflow-x: auto;
+  }
+}
+
+/* ── Mobile layout ────────────────────────────── */
+@media screen and (max-width: 768px) {
+  .screen-wrapper {
+    flex-direction: column;
+    background: #0f2d5a;
+  }
+  .sidebar {
+    width: 100% !important;
+    height: auto !important;
+    position: static !important;
+    overflow-y: visible !important;
+  }
+  .sidebar-header { padding: 14px 16px 10px; }
+  .sidebar-header h1 { font-size: 16px; }
+  .tab-nav {
+    flex-direction: row !important;
+    overflow-x: auto;
+    padding: 8px 8px 0;
+    gap: 4px;
+    scrollbar-width: none;
+  }
+  .tab-nav::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    flex-shrink: 0;
+    font-size: 11px;
+    padding: 7px 10px;
+    white-space: nowrap;
+  }
+  .fields-panel {
+    max-height: 280px;
+    overflow-y: auto;
+    padding: 10px 12px;
+  }
+  .sidebar-footer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    padding: 10px 12px;
+  }
+  .sidebar-footer #last-saved {
+    grid-column: 1 / -1;
+    text-align: center;
+    font-size: 10px;
+    color: #64748b;
+  }
+  .btn-generate { font-size: 12px; padding: 9px 6px; }
+  .btn-save     { font-size: 12px; padding: 9px 6px; }
+  .btn-print    { font-size: 12px; padding: 9px 6px; }
+  .btn-img      { font-size: 12px; padding: 9px 6px; }
+  .btn-reset    { grid-column: 1 / -1; font-size: 11px; padding: 7px; }
+  .main-area {
+    padding: 12px 8px 24px;
+    justify-content: flex-start;
+    background: #f0f4f8;
+    overflow-x: auto;
+  }
+  .infographic { width: 900px; }
+}
+
+/* ── Infographic (shared screen + print) ──────── */
+.infographic {
+  width: 900px;
+  background: #fff;
+  font-family: var(--font);
+  direction: rtl;
+}
+
+/* Header */
+.ig-header {
+  background: var(--blue-dark);
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  margin-bottom: 6px;
+}
+.ig-header-title { font-size: 17px; font-weight: 900; letter-spacing: -.3px; }
+.ig-header-sub   { font-size: 12px; font-weight: 300; opacity: .8; margin-top: 1px; }
+.ig-header-date  { font-size: 12px; opacity: .75; font-weight: 300; }
+
+/* Alert bar */
+.ig-alert {
+  background: #fffbeb;
+  border: 2px solid var(--amber);
+  border-radius: var(--radius);
+  padding: 8px 12px;
+  margin-bottom: 6px;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.ig-alert-icon { font-size: 18px; flex-shrink: 0; line-height: 1; }
+.ig-alert-title { font-weight: 700; font-size: 11px; color: #92400e; margin-bottom: 2px; }
+.ig-alert-text  { font-size: 10px; color: #78350f; line-height: 1.4; }
+
+/* Grid */
+.ig-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+/* Cards */
+.ig-card {
+  background: #fff;
+  border: var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.ig-card-header {
+  background: var(--blue-mid);
+  color: #fff;
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 5px 10px;
+  letter-spacing: .02em;
+}
+.ig-card-body { padding: 8px 10px; font-size: 9.5px; }
+
+/* Info rows */
+.info-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+.info-item .lbl { color: var(--gray-5); font-size: 9px; font-weight: 400; }
+.info-item .val { font-weight: 700; font-size: 10.5px; color: var(--blue-dark); }
+
+/* Arrow badge */
+.arrow-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--gray-1);
+  border-radius: 4px;
+  padding: 4px 8px;
+  margin-bottom: 6px;
+  font-size: 9px;
+}
+.gssp-badge {
+  background: #d1fae5;
+  border: 1px solid #6ee7b7;
+  border-radius: 4px;
+  padding: 2px 7px;
+  font-weight: 700;
+  font-size: 9px;
+  color: #065f46;
+}
+.arrow-icon { color: var(--blue-mid); font-size: 16px; font-weight: 700; }
+
+/* Blue info box */
+.info-box {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 4px;
+  padding: 6px 8px;
+  margin-bottom: 5px;
+  font-size: 9px;
+  line-height: 1.6;
+}
+.info-box .box-title { font-weight: 700; font-size: 10px; color: var(--blue-dark); margin-bottom: 3px; }
+.info-box .lbl { color: var(--gray-5); }
+
+/* Warning strip */
+.warn-strip {
+  background: #fefce8;
+  border: 1px solid #fde047;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 9px;
+  font-weight: 700;
+  color: #713f12;
+}
+
+/* Params row */
+.params-row {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  margin-bottom: 7px;
+}
+.param-box {
+  text-align: center;
+  background: var(--gray-1);
+  border: var(--border);
+  border-radius: 4px;
+  padding: 5px 6px;
+  min-width: 56px;
+  flex: 1;
+}
+.param-box .p-icon { font-size: 14px; line-height: 1; margin-bottom: 2px; }
+.param-box .p-lbl  { font-size: 7.5px; color: var(--gray-5); }
+.param-box .p-val  { font-weight: 700; font-size: 10px; color: var(--blue-dark); }
+
+/* Green box */
+.green-box {
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+  border-radius: 4px;
+  padding: 6px 8px;
+  font-size: 9px;
+  line-height: 1.7;
+}
+.green-box .g-title { font-weight: 700; font-size: 10px; color: var(--green); margin-bottom: 3px; }
+
+/* Quality split */
+.quality-split { display: grid; grid-template-columns: 1fr 1fr; }
+.quality-split > div:first-child { border-left: var(--border); }
+
+.kv-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 3px 0;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 9.5px;
+}
+.kv-row:last-child { border-bottom: none; }
+.kv-row .k { color: var(--gray-5); }
+.kv-row .v { font-weight: 700; color: var(--blue-dark); }
+
+.alert-strip {
+  background: #fef2f2;
+  border: 1px solid #fca5a5;
+  border-radius: 4px;
+  padding: 4px 7px;
+  margin-top: 5px;
+  font-size: 8.5px;
+  font-weight: 700;
+  color: var(--red);
+}
+
+/* Gauge SVG area */
+.gauge-wrap { text-align: center; margin-bottom: 6px; }
+.gauge-lbl { font-size: 8.5px; color: var(--gray-5); margin-top: 2px; }
+.gauge-val { font-weight: 700; color: var(--red); }
+
+.fine-box {
+  background: var(--gray-1);
+  border: var(--border);
+  border-radius: 4px;
+  padding: 5px 7px;
+  font-size: 8.5px;
+  line-height: 1.6;
+}
+.fine-box .fb-title { font-weight: 700; font-size: 9.5px; margin-bottom: 2px; color: var(--blue-dark); }
+
+/* Mgmt card */
+.status-pills { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 7px; }
+.pill {
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-size: 9px;
+  font-weight: 700;
+}
+.pill-green { background: #f0fdf4; border: 1px solid #86efac; color: #166534; }
+.pill-red   { background: #fef2f2; border: 1px solid #fca5a5; color: var(--red); }
+
+.columns-title {
+  font-size: 9.5px;
+  font-weight: 700;
+  color: var(--blue-dark);
+  border-top: var(--border);
+  padding-top: 7px;
+  margin-top: 4px;
+  margin-bottom: 8px;
+}
+.columns-row { display: flex; gap: 8px; justify-content: space-around; }
+.col-item { text-align: center; }
+.col-bar {
+  width: 52px;
+  height: 40px;
+  border-radius: 6px 6px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: 12px;
+  margin: 0 auto;
+}
+.col-lbl-box {
+  background: var(--blue-dark);
+  color: #fff;
+  font-size: 8px;
+  padding: 2px 4px;
+  border-radius: 0 0 4px 4px;
+  font-weight: 500;
+}
+.quality-check-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--gray-1);
+  border-radius: 4px;
+  padding: 5px 8px;
+  margin-top: 7px;
+  font-size: 9px;
+}
+.qc-icon { font-size: 15px; }
+.qc-title { font-weight: 700; color: var(--blue-dark); font-size: 9.5px; }
+.qc-val   { color: var(--gray-5); }
+
+/* ── Print styles ─────────────────────────────── */
+@media print {
+  @page {
+    size: A4 landscape;
+    margin: 6mm;
+  }
+  html, body {
+    background: #fff !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  .screen-wrapper { display: block !important; }
+  .sidebar { display: none !important; }
+  .main-area {
+    display: block !important;
+    padding: 0 !important;
+  }
+  .infographic {
+    width: 100% !important;
+    max-width: 100% !important;
+    transform-origin: top right;
+  }
+  .ig-grid { gap: 4px !important; }
+  .ig-header { padding: 7px 12px !important; }
+  .ig-card-header { font-size: 9.5px !important; padding: 4px 8px !important; }
+  .ig-card-body { padding: 6px 8px !important; }
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+}
+</style>
+</head>
+<body>
+<div class="screen-wrapper">
+<div id="toast" style="background: rgb(124, 58, 237); opacity: 0; transform: translateY(10px);">📸 צלם מסך ושלח בווטסאפ! 📲</div>
+
+  <!-- ══ SIDEBAR ══════════════════════════════════ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h1>🏭 מחולל הנחיות ייצור</h1>
+      <p>ערוך שדות ← לחץ הפק ← הדפס</p>
+    </div>
+
+    <!-- Tab nav -->
+    <nav class="tab-nav">
+      <button class="tab-btn active" onclick="switchTab(&#39;general&#39;,this)">📋 כללי</button>
+      <button class="tab-btn" onclick="switchTab(&#39;gssp&#39;,this)">🔵 GSSP הזנה</button>
+      <button class="tab-btn" onclick="switchTab(&#39;quality&#39;,this)">📊 GSSP איכות</button>
+      <button class="tab-btn" onclick="switchTab(&#39;ssp&#39;,this)">🟢 SSP</button>
+      <button class="tab-btn" onclick="switchTab(&#39;mgmt&#39;,this)">⚙️ ניהול</button>
+      <button class="tab-btn" onclick="switchTab(&#39;labels&#39;,this)">🏷️ כותרות</button>
+    </nav>
+
+    <!-- Fields -->
+    <div class="fields-panel" id="fields-panel"><div class="field-group"><label>תאריך</label><input type="text" data-k="date" value="11 אפריל 2026" oninput="D[this.dataset.k]=this.value;liveUpdate()"></div><div class="field-group"><label>כותרת משנה (מתקנים)</label><input type="text" data-k="subtitle" value="מתקנים 41 + 42" oninput="D[this.dataset.k]=this.value;liveUpdate()"></div><div class="field-group"><label>כותרת התראה</label><input type="text" data-k="alertTitle" value="מערכת מזוט" oninput="D[this.dataset.k]=this.value;liveUpdate()"></div><div class="field-group"><label>טקסט התראה</label><textarea data-k="alertText" oninput="D[this.dataset.k]=this.value;liveUpdate()">יש להגביר סיורים סביב מערכת המזוט -- משאבות, מחממים, פורקים, וסביבת המאצרה ולדווח על כל ממצא חריג!</textarea></div></div>
+
+    <!-- Footer buttons -->
+    <div class="sidebar-footer">
+      <div id="last-saved" style="font-size:10px;color:#64748b;text-align:center;margin-bottom:4px">עדכון אחרון: 11.4.2026 16:23</div>
+      <button class="btn-generate" onclick="generate()">📊 הפק אינפוגרפיקה</button>
+      <button id="btn-save" class="btn-save" onclick="saveToSupabase()">💾 שמור הנחיות</button>
+      <button class="btn-print" onclick="window.print()">🖨️ הדפס / שמור PDF</button>
+      <button class="btn-img" id="btn-img" onclick="downloadImage()">📸 הורד תמונה לווטסאפ</button>
+      <button class="btn-reset" onclick="resetData()">🔄 איפוס לברירת מחדל</button>
+    </div>
+  </aside>
+
+  <!-- ══ MAIN ══════════════════════════════════════ -->
+  <main class="main-area">
+    <div class="infographic" id="infographic"><div class="ig-header">  <div>    <div class="ig-header-title">הנחיות ייצור יומיות</div>    <div class="ig-header-sub">מתקנים 41 + 42</div>  </div>  <div class="ig-header-date">תאריך: 11 אפריל 2026</div></div><div class="ig-alert">  <div class="ig-alert-icon">⚙️</div>  <div>    <div class="ig-alert-title">מערכת מזוט</div>    <div class="ig-alert-text">יש להגביר סיורים סביב מערכת המזוט -- משאבות, מחממים, פורקים, וסביבת המאצרה ולדווח על כל ממצא חריג!</div>  </div></div><div class="ig-grid">  <!-- GSSP -->  <div class="ig-card">    <div class="ig-card-header">הנחיות לייצור GSSP - מתקן 42  </div>    <div class="ig-card-body">      <div class="info-row">        <div class="info-item"><div class="lbl">מוצר</div><div class="val">GSSP ברזיל</div></div>        <div class="info-item"><div class="lbl">תא ייצור נוכחי</div><div class="val">N-22</div></div>        <div class="info-item"><div class="lbl">תא ייצור הבא</div><div class="val">N-23</div></div>      </div>      <div class="arrow-row">        <span class="gssp-badge">GSSP</span>        <span class="arrow-icon">→</span>        <span style="font-size:9px;color:#374151">לכוון תפוקה שעתית בתוצרת -  75-80 טון/שעה</span>      </div>      <div class="info-box">        <div class="box-title">הזנות - עבודה עם הזנה ישירה</div>        <div><span class="lbl">בורות בהזנה עקיפה: </span>709/710, SSP, AB</div>        <div><span class="lbl">בור 707: </span>15 טון/שעה, שפיכות GSSP מתא S12 ימין</div>        <div><span class="lbl">בור 706: </span>8 טון/שעה, שפיכות טרייספוס מתא S7</div>      </div>      <div class="warn-strip">⚖️ # 1. יש לתעדף הזנות שפיכות על אבקי מ-AB
+</div>    </div>  </div>  <!-- SSP -->  <div class="ig-card">    <div class="ig-card-header">הנחיות לייצור (מתקן 41) SSP</div>    <div class="ig-card-body">      <div style="font-weight:700;font-size:9.5px;margin-bottom:6px;color:#0f2d5a">הזנה אל הפגמיל</div>      <div class="params-row">        <div class="param-box"><div class="p-icon">🧪</div><div class="p-lbl">R חומצה זרחתית</div><div class="p-val">0.03</div></div>        <div class="param-box"><div class="p-icon">🔵</div><div class="p-lbl">ברום/ממוחזרת 55%</div><div class="p-val">0</div></div>        <div class="param-box"><div class="p-icon">💧</div><div class="p-lbl">R מים/תחמיץ</div><div class="p-val">0.08</div></div>        <div class="param-box"><div class="p-icon">🪨</div><div class="p-lbl">R גופרתית 75%</div><div class="p-val">0.42</div></div>        <div class="param-box"><div class="p-icon">⚙️</div><div class="p-lbl">הזנת פוספט (טון/שעה)</div><div class="p-val">40</div></div>      </div>      <div class="green-box">        <div class="g-title">הנחיות מיוחדות</div>        <div>## בדיקת #100: כל ארבע שעות</div>        <div>## הערה נוספת (1): הוצאת עגלה ופתיחת קלאפה כל שעתיים</div>        <div>## הערה נוספת (2) : יש לתעדף משיכת ציקלון מסילו 177 (משיכה מסילו 178 באישור משה/עבד)</div>      </div>    </div>  </div>  <!-- Quality -->  <div class="ig-card">    <div class="ig-card-header">פרמטרי איכות - תוצרת מגורען</div>    <div class="quality-split">      <div class="ig-card-body">        <div class="kv-row"><span class="k">טוטאל</span><span class="v">21.1-21.3</span></div>        <div class="kv-row"><span class="k">מסיס</span><span class="v">~18</span></div>        <div class="kv-row"><span class="k">פקטור</span><span class="v">15.5-16.5</span></div>        <div class="kv-row"><span class="k">רטיבות</span><span class="v">3.5-4% </span></div>        <div class="alert-strip">🛑 במידה והתחזיר גבוה (מעל 150) ולא יורד, יש לעצור הזנות לפי הסדר הבא: (1) הזנה עקיפה (2) 707 במידה והוזן (3) להוציא ישירה.
+אם לאחר 3 השלבים התחזיר עדיין גבוה, יש לעדכן את עבד/משה</div>      </div>      <div class="ig-card-body">        <div class="gauge-wrap">          <svg width="64" height="36" viewBox="0 0 64 36">            <path d="M6,32 A26,26 0 0,1 58,32" fill="none" stroke="#e5e7eb" stroke-width="8" stroke-linecap="round"></path>            <path d="M6,32 A26,26 0 0,1 32,6" fill="none" stroke="#22c55e" stroke-width="8" stroke-linecap="round"></path>            <path d="M32,6 A26,26 0 0,1 50,11" fill="none" stroke="#eab308" stroke-width="8" stroke-linecap="round"></path>            <path d="M50,11 A26,26 0 0,1 58,32" fill="none" stroke="#ef4444" stroke-width="8" stroke-linecap="round"></path>            <line x1="32" y1="32" x2="46" y2="13" stroke="#0f2d5a" stroke-width="2.5" stroke-linecap="round"></line>            <circle cx="32" cy="32" r="3.5" fill="#0f2d5a"></circle>          </svg>          <div class="gauge-lbl">תחזיר: <span class="gauge-val">100-130 טון/שעה</span></div>        </div>        <div class="fine-box">          <div class="fb-title">ריכוז דקים בתוצרת</div>          <div>ערך מטרה: 2.5% &nbsp;|&nbsp; ערך מקסימלי: 5%</div>          <div style="color:#6c757d;font-size:8px;margin-top:2px">יש לגרען לכיוון הגס, במידה ומתקבלות 2 תוצאות ברצף מעל 4.5% עצור מתקן לניקיונות</div>        </div>      </div>    </div>  </div>  <!-- Mgmt -->  <div class="ig-card">    <div class="ig-card-header">ניהול מפלס 959</div>    <div class="ig-card-body">      <div style="font-size:9px;margin-bottom:6px;color:#374151">לפני פתיחת ברז אל 30 יש לעדכן את עבד/משה</div>      <div class="status-pills">        <span class="pill pill-green">✅ מפלס מיכל מעל 85%: אישור פתיחה</span>        <span class="pill pill-red">🔴 &lt;מפלס מיכל נמוך מ-60%: סגירת ברז xv-3814</span>      </div>      <div class="columns-title">השלמה לעמודות (ממוצע 4 שעות)</div>      <div class="columns-row">        <div class="col-item">          <div class="col-bar" style="background:#60a5fa">3 קוב/שעה</div>          <div class="col-lbl-box">ליין 1-מקרר מגרען</div>        </div>        <div class="col-item">          <div class="col-bar" style="background:#34d399">4 קוב/שעה</div>          <div class="col-lbl-box">ליין 2-מייבש 1</div>        </div>        <div class="col-item">          <div class="col-bar" style="background:#34d399">4 קוב/שעה</div>          <div class="col-lbl-box">ליין 3-מייבש 2</div>        </div>      </div>      <div class="quality-check-row">        <span class="qc-icon">⏱️</span>        <div><div class="qc-title">בדיקת בקבוקים</div><div class="qc-val">יש לקחת בקבוקי דיגום של נקזים מהפילטר של כל ליין בתחילת משמרת ולצלם לקבוצה בסוף המשמרת</div></div>      </div>    </div>  </div></div></div>
+  </main>
+</div>
+
+<script src="./inst2_files/html2canvas.min.js"></script>
+<script>
+// ── Data ──────────────────────────────────────────
+var DEF = {
+  date: "11 במרץ 2026",
+  subtitle: "מתקנים 41 + 42",
+  alertTitle: "מערכת מזוט",
+  alertText: "יש להגביר סיורים סביב מערכת המזוט, הפורקים, המחממים, הפורקים, המחממים והמשאבות ולדווח על כל ממצא חריג!",
+  // GSSP
+  gssp_card_title: "הנחיות למשך ייצור (מתקן 42) - GSSP",
+  gssp_fuel: "ברזיל",
+  gssp_tea_cur: "N-22",
+  gssp_tea_next: "N-23",
+  gssp_batch: "42 (ישירה)",
+  gssp_storage: "709/710",
+  gssp_range: "15-20 טון",
+  gssp_707: "15 טון, MAX שפיכות GSSP S12 צד ימינה",
+  gssp_706: "8 טון, שפיכות טריוספוס S7 (הזנה רציפה במקום חומצה)",
+  gssp_spill: "יש לעדכין הזנות שפיכות על אבקי",
+  // Quality
+  q_card_title: "פרמטרים לאיכות",
+  q_retention: "41-1",
+  q_total: "21.1",
+  q_humidity: "11-12%",
+  q_recycling: "80-120",
+  q_factor: "15.5 – 16.5",
+  q_fine_rate: "4.9%",
+  q_fine_note: "עמד 4.9% דקים – עצור מתקן ולקות נפות!",
+  q_mist_target: "2.5%",
+  q_mist_max: "4%",
+  q_mist_note: "גירוון גז, נקה נפות בעצירה",
+  // SSP
+  ssp_card_title: "הנחיות לייצור (מתקן 41) SSP - (ME)",
+  ssp_acid_check: "בדיקת 100: כל ארבע שעות",
+  ssp_aging: "הוצא עגלה ופתח כלפה כל 2 שעות",
+  ssp_mezz: "אל תמשור 7 – אל אם <50%. עדיפות למצקלון 177",
+  ssp_sulfuric: "0.03",
+  ssp_bromine: "0",
+  ssp_water: "0.08",
+  ssp_gypsum: "0.42:75",
+  ssp_throughput: "40",
+  // Mgmt
+  mgmt_card_title: "ניהול מפלס 959",
+  mgmt_contact: "צור קשר עם מנהל, אישור הזרמה ל-30",
+  mgmt_high: "85%",
+  mgmt_low: "60%",
+  mgmt_close: "סגור ברד ל-30 לאלתר!",
+  line1_lbl: "ליין 1", line1_val: "3 קוב",
+  line2_lbl: "ליין 2", line2_val: "4 קוב",
+  line3_lbl: "ליין 3", line3_val: "4 קוב",
+  qc_title: "בדיקות איכות",
+  qc_val: "בדיקת 100: כל ארבע שעות",
+};
+var D = JSON.parse(JSON.stringify(DEF));
+
+// ── Tab field definitions ─────────────────────────
+var TABS = {
+  general: [
+    {k:"date", l:"תאריך"},
+    {k:"subtitle", l:"כותרת משנה (מתקנים)"},
+    {k:"alertTitle", l:"כותרת התראה"},
+    {k:"alertText", l:"טקסט התראה", ml:true},
+  ],
+  gssp: [
+    {k:"gssp_card_title", l:"כותרת כרטיסייה", ml:true},
+    {sec:"פרטי הזנה"},
+    {k:"gssp_fuel", l:"סוג חמר"},
+    {k:"gssp_tea_cur", l:"תא נוכחי"},
+    {k:"gssp_tea_next", l:"תא הבא"},
+    {k:"gssp_batch", l:"אצווה (הזנות)"},
+    {k:"gssp_storage", l:"אחסון (תאים)"},
+    {k:"gssp_range", l:"כמות חץ"},
+    {sec:"הנחיות"},
+    {k:"gssp_707", l:"707", ml:true},
+    {k:"gssp_706", l:"706", ml:true},
+    {k:"gssp_spill", l:"הערת שפיכות", ml:true},
+  ],
+  quality: [
+    {k:"q_card_title", l:"כותרת כרטיסייה"},
+    {sec:"פרמטרי איכות"},
+    {k:"q_retention", l:"רטיבות ב-1"},
+    {k:"q_total", l:"טוטאל"},
+    {k:"q_humidity", l:"לחות (%)"},
+    {k:"q_recycling", l:"עומס חזרה (טון/שעה)"},
+    {k:"q_factor", l:"פקטור"},
+    {sec:"מיון דקים"},
+    {k:"q_fine_rate", l:"% דקים"},
+    {k:"q_fine_note", l:"הערת דקים (התראה)", ml:true},
+    {k:"q_mist_target", l:"מטרה"},
+    {k:"q_mist_max", l:"מקסימום"},
+    {k:"q_mist_note", l:"הערה"},
+  ],
+  ssp: [
+    {k:"ssp_card_title", l:"כותרת כרטיסייה", ml:true},
+    {sec:"פרמטרי הזנה"},
+    {k:"ssp_sulfuric", l:"חומצה רתחתית"},
+    {k:"ssp_bromine", l:"ברומין"},
+    {k:"ssp_water", l:"מים"},
+    {k:"ssp_gypsum", l:"גופרתית (יחס)"},
+    {k:"ssp_throughput", l:"ספיקה (טון/שעה)"},
+    {sec:"הנחיות מיוחדות"},
+    {k:"ssp_acid_check", l:"בדיקת חומצה", ml:true},
+    {k:"ssp_aging", l:"גישים (עקב 618)", ml:true},
+    {k:"ssp_mezz", l:"מצקלון 178", ml:true},
+  ],
+  mgmt: [
+    {k:"mgmt_card_title", l:"כותרת כרטיסייה"},
+    {sec:"ניהול"},
+    {k:"mgmt_contact", l:"הנחיית קשר", ml:true},
+    {k:"mgmt_high", l:"סף אישור"},
+    {k:"mgmt_low", l:"סף סגירה"},
+    {k:"mgmt_close", l:"הנחיית סגירה", ml:true},
+    {sec:"השלמה לעמודות"},
+    {k:"line1_lbl", l:"ליין 1 – שם"},
+    {k:"line1_val", l:"ליין 1 – ערך"},
+    {k:"line2_lbl", l:"ליין 2 – שם"},
+    {k:"line2_val", l:"ליין 2 – ערך"},
+    {k:"line3_lbl", l:"ליין 3 – שם"},
+    {k:"line3_val", l:"ליין 3 – ערך"},
+    {sec:"בדיקות"},
+    {k:"qc_title", l:"כותרת בדיקות"},
+    {k:"qc_val", l:"תיאור בדיקות"},
+  ],
+};
+
+// ── Default Labels (all hardcoded text in infographic) ──
+var DEF_LABELS = {
+  // Header
+  main_title: "הנחיות ייצור יומיות",
+  // Alert
+  alert_icon_label: "מערכת מזוט",
+  // GSSP card
+  lbl_bacham: "בחמר",
+  lbl_tea_cur: "תא נוכחי",
+  lbl_tea_next: "תא הבא",
+  lbl_gssp_badge: "GSSP",
+  lbl_storage_suffix: ", SSP, AB",
+  lbl_haz_prefix: "הזנות",
+  lbl_achs: "אחסון",
+  lbl_707: "707",
+  lbl_706: "706",
+  lbl_spill_prefix: "⚖️ #",
+  // SSP card
+  lbl_ssp_params_title: "פרמטרים של הזנה",
+  lbl_acid: "חומצה",
+  lbl_bromine: "ברומין",
+  lbl_water: "מים",
+  lbl_gypsum: "גופרתית",
+  lbl_throughput: "טון/שעה",
+  lbl_special: "הנחיות מיוחדות",
+  lbl_aging_prefix: "גישים (עקב 618)",
+  lbl_mezz_prefix: "מצקלון 178",
+  // Quality card
+  lbl_retention: "רטיבות ב-1",
+  lbl_total: "טוטאל",
+  lbl_humidity: "לחות",
+  lbl_recycling: "עומס חזרה",
+  lbl_recycling_suffix: "טון/שעה",
+  lbl_factor_prefix: "פקטור",
+  lbl_fine_section: "מיון דקים",
+  lbl_mist_target: "מטרה",
+  lbl_mist_max: "מקסימום",
+  // Mgmt card
+  lbl_approve: "אישור",
+  lbl_close_action: "סגירה",
+  lbl_columns_title: "השלמה לעמודות (ממוצע 4 שעות)",
+  lbl_date_prefix: "תאריך",
+};
+var L = JSON.parse(JSON.stringify(DEF_LABELS));
+
+var LABEL_FIELDS = [
+  {sec:"כותרת ראשית"},
+  {k:"main_title", l:"כותרת האינפוגרפיקה"},
+  {k:"lbl_date_prefix", l:"תחילית תאריך"},
+  {sec:"סרגל התראה"},
+  {k:"alert_icon_label", l:"כותרת ההתראה"},
+  {sec:"כרטיסיית GSSP"},
+  {k:"lbl_bacham", l:"תווית בחמר"},
+  {k:"lbl_tea_cur", l:"תווית תא נוכחי"},
+  {k:"lbl_tea_next", l:"תווית תא הבא"},
+  {k:"lbl_gssp_badge", l:"תג GSSP"},
+  {k:"lbl_haz_prefix", l:"תחילית הזנות"},
+  {k:"lbl_achs", l:"תווית אחסון"},
+  {k:"lbl_707", l:"תווית 707"},
+  {k:"lbl_706", l:"תווית 706"},
+  {k:"lbl_spill_prefix", l:"תחילית שפיכות"},
+  {sec:"כרטיסיית SSP"},
+  {k:"lbl_ssp_params_title", l:"כותרת פרמטרים"},
+  {k:"lbl_acid", l:"תווית חומצה"},
+  {k:"lbl_bromine", l:"תווית ברומין"},
+  {k:"lbl_water", l:"תווית מים"},
+  {k:"lbl_gypsum", l:"תווית גופרתית"},
+  {k:"lbl_throughput", l:"תווית טון/שעה"},
+  {k:"lbl_special", l:"כותרת הנחיות מיוחדות"},
+  {k:"lbl_aging_prefix", l:"תחילית גישים"},
+  {k:"lbl_mezz_prefix", l:"תחילית מצקלון"},
+  {sec:"כרטיסיית איכות"},
+  {k:"lbl_retention", l:"תווית רטיבות"},
+  {k:"lbl_total", l:"תווית טוטאל"},
+  {k:"lbl_humidity", l:"תווית לחות"},
+  {k:"lbl_recycling", l:"תווית עומס חזרה"},
+  {k:"lbl_recycling_suffix", l:"סיומת עומס חזרה"},
+  {k:"lbl_factor_prefix", l:"תווית פקטור"},
+  {k:"lbl_fine_section", l:"כותרת מיון דקים"},
+  {k:"lbl_mist_target", l:"תווית מטרה"},
+  {k:"lbl_mist_max", l:"תווית מקסימום"},
+  {sec:"כרטיסיית ניהול"},
+  {k:"lbl_approve", l:"תווית אישור"},
+  {k:"lbl_close_action", l:"תווית סגירה"},
+  {k:"lbl_columns_title", l:"כותרת עמודות"},
+];
+
+var currentTab = "general";
+
+function switchTab(tab, btn) {
+  currentTab = tab;
+  document.querySelectorAll(".tab-btn").forEach(function(b){ b.classList.remove("active"); });
+  btn.classList.add("active");
+  renderFields();
+}
+
+function renderFields() {
+  var isLabels = currentTab === "labels";
+  var fields = isLabels ? LABEL_FIELDS : (TABS[currentTab] || []);
+  var html = "";
+  if (isLabels) {
+    html += "<div style='font-size:10px;color:#f59e0b;margin-bottom:10px;padding:6px 8px;background:rgba(245,158,11,0.1);border-radius:4px;border:1px solid rgba(245,158,11,0.3)'>✏️ שינויים בכותרות ישמרו יחד עם ההנחיות בלחיצה על 💾 שמור</div>";
+  }
+  fields.forEach(function(f) {
+    if (f.sec) {
+      html += "<div class='section-divider'>" + f.sec + "</div>";
+      return;
+    }
+    html += "<div class='field-group'><label>" + f.l + "</label>";
+    if (isLabels) {
+      var val = (L[f.k] || "").toString().replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      html += "<input type='text' data-lk='" + f.k + "' value='" + val + "' oninput='L[this.dataset.lk]=this.value;liveUpdate()' style='border-color:rgba(245,158,11,0.5)'>";
+    } else {
+      var val2 = (D[f.k] || "").toString().replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      if (f.ml) {
+        html += "<textarea data-k='" + f.k + "' oninput='D[this.dataset.k]=this.value;liveUpdate()'>" + val2 + "</textarea>";
+      } else {
+        html += "<input type='text' data-k='" + f.k + "' value='" + val2 + "' oninput='D[this.dataset.k]=this.value;liveUpdate()'>";
+      }
+    }
+    html += "</div>";
+  });
+  document.getElementById("fields-panel").innerHTML = html;
+}
+
+function liveUpdate() { generate(); }
+
+function esc(s) {
+  return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+function generate() {
+  var isFine = parseFloat(D.q_fine_rate) >= 4;
+  var html = "\
+<div class='ig-header'>\
+  <div>\
+    <div class='ig-header-title'>" + esc(L.main_title) + "</div>\
+    <div class='ig-header-sub'>" + esc(D.subtitle) + "</div>\
+  </div>\
+  <div class='ig-header-date'>" + esc(L.lbl_date_prefix) + ": " + esc(D.date) + "</div>\
+</div>\
+<div class='ig-alert'>\
+  <div class='ig-alert-icon'>⚙️</div>\
+  <div>\
+    <div class='ig-alert-title'>" + esc(D.alertTitle) + "</div>\
+    <div class='ig-alert-text'>" + esc(D.alertText) + "</div>\
+  </div>\
+</div>\
+<div class='ig-grid'>\
+\
+  <!-- GSSP -->\
+  <div class='ig-card'>\
+    <div class='ig-card-header'>" + esc(D.gssp_card_title) + "</div>\
+    <div class='ig-card-body'>\
+      <div class='info-row'>\
+        <div class='info-item'><div class='lbl'>" + esc(L.lbl_bacham) + "</div><div class='val'>" + esc(L.lbl_gssp_badge) + " " + esc(D.gssp_fuel) + "</div></div>\
+        <div class='info-item'><div class='lbl'>" + esc(L.lbl_tea_cur) + "</div><div class='val'>" + esc(D.gssp_tea_cur) + "</div></div>\
+        <div class='info-item'><div class='lbl'>" + esc(L.lbl_tea_next) + "</div><div class='val'>" + esc(D.gssp_tea_next) + "</div></div>\
+      </div>\
+      <div class='arrow-row'>\
+        <span class='gssp-badge'>" + esc(L.lbl_gssp_badge) + "</span>\
+        <span class='arrow-icon'>→</span>\
+        <span style='font-size:9px;color:#374151'>" + esc(D.gssp_range) + "</span>\
+      </div>\
+      <div class='info-box'>\
+        <div class='box-title'>" + esc(L.lbl_haz_prefix) + " " + esc(D.gssp_batch) + "</div>\
+        <div><span class='lbl'>" + esc(L.lbl_achs) + ": </span>" + esc(D.gssp_storage) + esc(L.lbl_storage_suffix) + "</div>\
+        <div><span class='lbl'>" + esc(L.lbl_707) + ": </span>" + esc(D.gssp_707) + "</div>\
+        <div><span class='lbl'>" + esc(L.lbl_706) + ": </span>" + esc(D.gssp_706) + "</div>\
+      </div>\
+      <div class='warn-strip'>" + esc(L.lbl_spill_prefix) + " " + esc(D.gssp_spill) + "</div>\
+    </div>\
+  </div>\
+\
+  <!-- SSP -->\
+  <div class='ig-card'>\
+    <div class='ig-card-header'>" + esc(D.ssp_card_title) + "</div>\
+    <div class='ig-card-body'>\
+      <div style='font-weight:700;font-size:9.5px;margin-bottom:6px;color:#0f2d5a'>" + esc(L.lbl_ssp_params_title) + "</div>\
+      <div class='params-row'>\
+        <div class='param-box'><div class='p-icon'>🧪</div><div class='p-lbl'>" + esc(L.lbl_acid) + "</div><div class='p-val'>" + esc(D.ssp_sulfuric) + "</div></div>\
+        <div class='param-box'><div class='p-icon'>🔵</div><div class='p-lbl'>" + esc(L.lbl_bromine) + "</div><div class='p-val'>" + esc(D.ssp_bromine) + "</div></div>\
+        <div class='param-box'><div class='p-icon'>💧</div><div class='p-lbl'>" + esc(L.lbl_water) + "</div><div class='p-val'>" + esc(D.ssp_water) + "</div></div>\
+        <div class='param-box'><div class='p-icon'>🪨</div><div class='p-lbl'>" + esc(L.lbl_gypsum) + "</div><div class='p-val'>" + esc(D.ssp_gypsum) + "</div></div>\
+        <div class='param-box'><div class='p-icon'>⚙️</div><div class='p-lbl'>" + esc(L.lbl_throughput) + "</div><div class='p-val'>" + esc(D.ssp_throughput) + "</div></div>\
+      </div>\
+      <div class='green-box'>\
+        <div class='g-title'>" + esc(L.lbl_special) + "</div>\
+        <div>## " + esc(D.ssp_acid_check) + "</div>\
+        <div>## " + esc(L.lbl_aging_prefix) + ": " + esc(D.ssp_aging) + "</div>\
+        <div>## " + esc(L.lbl_mezz_prefix) + ": " + esc(D.ssp_mezz) + "</div>\
+      </div>\
+    </div>\
+  </div>\
+\
+  <!-- Quality -->\
+  <div class='ig-card'>\
+    <div class='ig-card-header'>" + esc(D.q_card_title) + "</div>\
+    <div class='quality-split'>\
+      <div class='ig-card-body'>\
+        <div class='kv-row'><span class='k'>" + esc(L.lbl_retention) + "</span><span class='v'>" + esc(D.q_retention) + "</span></div>\
+        <div class='kv-row'><span class='k'>" + esc(L.lbl_total) + "</span><span class='v'>" + esc(D.q_total) + "</span></div>\
+        <div class='kv-row'><span class='k'>" + esc(L.lbl_humidity) + "</span><span class='v'>" + esc(D.q_humidity) + "</span></div>\
+        <div class='kv-row'><span class='k'>" + esc(L.lbl_recycling) + "</span><span class='v'>" + esc(D.q_recycling) + " " + esc(L.lbl_recycling_suffix) + "</span></div>\
+        " + (isFine ? "<div class='alert-strip'>🛑 " + esc(D.q_fine_note) + "</div>" : "") + "\
+      </div>\
+      <div class='ig-card-body'>\
+        <div class='gauge-wrap'>\
+          <svg width='64' height='36' viewBox='0 0 64 36'>\
+            <path d='M6,32 A26,26 0 0,1 58,32' fill='none' stroke='#e5e7eb' stroke-width='8' stroke-linecap='round'/>\
+            <path d='M6,32 A26,26 0 0,1 32,6' fill='none' stroke='#22c55e' stroke-width='8' stroke-linecap='round'/>\
+            <path d='M32,6 A26,26 0 0,1 50,11' fill='none' stroke='#eab308' stroke-width='8' stroke-linecap='round'/>\
+            <path d='M50,11 A26,26 0 0,1 58,32' fill='none' stroke='#ef4444' stroke-width='8' stroke-linecap='round'/>\
+            <line x1='32' y1='32' x2='46' y2='13' stroke='#0f2d5a' stroke-width='2.5' stroke-linecap='round'/>\
+            <circle cx='32' cy='32' r='3.5' fill='#0f2d5a'/>\
+          </svg>\
+          <div class='gauge-lbl'>" + esc(L.lbl_factor_prefix) + ": <span class='gauge-val'>" + esc(D.q_factor) + "</span></div>\
+        </div>\
+        <div class='fine-box'>\
+          <div class='fb-title'>" + esc(L.lbl_fine_section) + "</div>\
+          <div>" + esc(L.lbl_mist_target) + ": " + esc(D.q_mist_target) + " &nbsp;|&nbsp; " + esc(L.lbl_mist_max) + ": " + esc(D.q_mist_max) + "</div>\
+          <div style='color:#6c757d;font-size:8px;margin-top:2px'>" + esc(D.q_mist_note) + "</div>\
+        </div>\
+      </div>\
+    </div>\
+  </div>\
+\
+  <!-- Mgmt -->\
+  <div class='ig-card'>\
+    <div class='ig-card-header'>" + esc(D.mgmt_card_title) + "</div>\
+    <div class='ig-card-body'>\
+      <div style='font-size:9px;margin-bottom:6px;color:#374151'>" + esc(D.mgmt_contact) + "</div>\
+      <div class='status-pills'>\
+        <span class='pill pill-green'>✅ " + esc(D.mgmt_high) + ": " + esc(L.lbl_approve) + "</span>\
+        <span class='pill pill-red'>🔴 &lt;" + esc(D.mgmt_low) + ": " + esc(D.mgmt_close) + "</span>\
+      </div>\
+      <div class='columns-title'>" + esc(L.lbl_columns_title) + "</div>\
+      <div class='columns-row'>\
+        <div class='col-item'>\
+          <div class='col-bar' style='background:#60a5fa'>" + esc(D.line1_val) + "</div>\
+          <div class='col-lbl-box'>" + esc(D.line1_lbl) + "</div>\
+        </div>\
+        <div class='col-item'>\
+          <div class='col-bar' style='background:#34d399'>" + esc(D.line2_val) + "</div>\
+          <div class='col-lbl-box'>" + esc(D.line2_lbl) + "</div>\
+        </div>\
+        <div class='col-item'>\
+          <div class='col-bar' style='background:#34d399'>" + esc(D.line3_val) + "</div>\
+          <div class='col-lbl-box'>" + esc(D.line3_lbl) + "</div>\
+        </div>\
+      </div>\
+      <div class='quality-check-row'>\
+        <span class='qc-icon'>⏱️</span>\
+        <div><div class='qc-title'>" + esc(D.qc_title) + "</div><div class='qc-val'>" + esc(D.qc_val) + "</div></div>\
+      </div>\
+    </div>\
+  </div>\
+\
+</div>";
+
+  document.getElementById("infographic").innerHTML = html;
+}
+
+function resetData() {
+  D = JSON.parse(JSON.stringify(DEF));
+  L = JSON.parse(JSON.stringify(DEF_LABELS));
+  renderFields();
+  generate();
+}
+
+// ── Supabase config ──────────────────────────────
+var SUPA_URL = "https://yvsewujwjqdzvjaeogss.supabase.co";
+var SUPA_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl2c2V3dWp3anFkenZqYWVvZ3NzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4MzU1MTMsImV4cCI6MjA5MTQxMTUxM30.6J6YDhKhyVdlrOEsb8vFALmWIlEI-176hjzNqiWUvlg";
+
+function showToast(msg, color) {
+  var t = document.getElementById("toast");
+  if (!t) return;
+  t.textContent = msg;
+  t.style.background = color || "#1a4f8a";
+  t.style.opacity = "1";
+  t.style.transform = "translateY(0)";
+  setTimeout(function() { t.style.opacity = "0"; t.style.transform = "translateY(10px)"; }, 3000);
+}
+
+async function saveToSupabase() {
+  document.getElementById("btn-save").textContent = "⏳ שומר...";
+  try {
+    var checkRes = await fetch(SUPA_URL + "/rest/v1/guidelines?id=eq.1", {
+      headers: { "apikey": SUPA_KEY, "Authorization": "Bearer " + SUPA_KEY }
+    });
+    if (!checkRes.ok) throw new Error("בדיקה נכשלה: " + checkRes.status);
+    var existing = await checkRes.json();
+    var body = JSON.stringify({ id: 1, data: D, labels: L, updated_at: new Date().toISOString() });
+    var method = (existing && existing.length > 0) ? "PATCH" : "POST";
+    var url = SUPA_URL + "/rest/v1/guidelines" + (method === "PATCH" ? "?id=eq.1" : "");
+    var saveRes = await fetch(url, {
+      method: method,
+      headers: { "apikey": SUPA_KEY, "Authorization": "Bearer " + SUPA_KEY, "Content-Type": "application/json", "Prefer": "return=minimal" },
+      body: body
+    });
+    if (!saveRes.ok) throw new Error("שמירה נכשלה: " + saveRes.status);
+    var now = new Date();
+    var dateStr = now.toLocaleDateString("he-IL") + " " + now.toLocaleTimeString("he-IL", {hour:"2-digit", minute:"2-digit"});
+    document.getElementById("last-saved").textContent = "✅ נשמר: " + dateStr;
+    showToast("✅ ההנחיות נשמרו בהצלחה!", "#15803d");
+  } catch(err) {
+    console.error("Save error:", err);
+    showToast("❌ שגיאה בשמירה: " + err.message, "#b91c1c");
+    document.getElementById("last-saved").textContent = "❌ שגיאת שמירה";
+  }
+  document.getElementById("btn-save").textContent = "💾 שמור הנחיות";
+}
+
+async function loadFromSupabase() {
+  document.getElementById("last-saved").textContent = "טוען...";
+  try {
+    // ← תיקון: מבקשים גם data וגם labels וגם updated_at
+    var res = await fetch(SUPA_URL + "/rest/v1/guidelines?id=eq.1&select=data,labels,updated_at", {
+      headers: { "apikey": SUPA_KEY, "Authorization": "Bearer " + SUPA_KEY }
+    });
+    if (!res.ok) throw new Error("שגיאת שרת: " + res.status);
+    var rows = await res.json();
+    console.log("Loaded from Supabase:", rows);
+    if (rows && rows.length > 0 && rows[0].data) {
+      D = Object.assign({}, DEF, rows[0].data);
+      if (rows[0].labels) L = Object.assign({}, DEF_LABELS, rows[0].labels);
+      var ts = new Date(rows[0].updated_at);
+      var dateStr = ts.toLocaleDateString("he-IL") + " " + ts.toLocaleTimeString("he-IL", {hour:"2-digit", minute:"2-digit"});
+      document.getElementById("last-saved").textContent = "עדכון אחרון: " + dateStr;
+      showToast("📥 נטענו ההנחיות האחרונות", "#15803d");
+    } else {
+      document.getElementById("last-saved").textContent = "אין נתונים שמורים — מציג ברירת מחדל";
+      showToast("ℹ️ אין נתונים שמורים — ערוך ושמור", "#1a4f8a");
+    }
+  } catch(err) {
+    console.error("Load error:", err);
+    document.getElementById("last-saved").textContent = "❌ שגיאת טעינה — בדוק חיבור";
+    showToast("❌ שגיאת טעינה: " + err.message, "#b91c1c");
+  }
+  renderFields();
+  generate();
+}
+
+// Init
+loadFromSupabase();
+
+async function downloadImage() {
+  var btn = document.getElementById("btn-img");
+  btn.textContent = "⏳ מייצר תמונה...";
+  btn.disabled = true;
+  try {
+    // Build a self-contained HTML page and use it as a Blob URL
+    var isFine = parseFloat(D.q_fine_rate) >= 4;
+    var css = `
+      *{box-sizing:border-box;margin:0;padding:0}
+      body{background:#fff;font-family:Arial,sans-serif;direction:rtl;padding:12px}
+      .infog{width:900px;background:#dde3ec;padding:8px;border-radius:6px;font-size:9px;font-family:Arial,sans-serif;direction:rtl}
+      .ig-hdr{background:linear-gradient(90deg,#0f2d5a,#1a4f8a);color:white;display:flex;justify-content:space-between;align-items:center;padding:9px 14px;border-radius:4px 4px 0 0;margin-bottom:6px}
+      .ig-hdr-t{font-size:15px;font-weight:900}.ig-hdr-s{font-size:11px;font-weight:300;opacity:.8;margin-top:2px}.ig-hdr-d{font-size:11px;opacity:.75}
+      .ig-alert{background:#fffbeb;border:2px solid #f59e0b;border-radius:4px;padding:7px 11px;margin-bottom:6px;display:flex;gap:9px;align-items:flex-start}
+      .ig-alert-ttl{font-weight:700;font-size:11px;color:#92400e;margin-bottom:2px}.ig-alert-txt{font-size:10px;color:#78350f;line-height:1.4}
+      .ig-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+      .ig-card{background:white;border:1px solid #ced4da;border-radius:4px;overflow:hidden}
+      .ig-ch{background:#1a4f8a;color:white;font-size:10px;font-weight:700;padding:5px 9px}
+      .ig-body{padding:7px 9px;font-size:9px}
+      .info-row{display:flex;gap:12px;margin-bottom:5px;flex-wrap:wrap}
+      .lbl{color:#6c757d;font-size:8.5px}.val{font-weight:700;font-size:10px;color:#0f2d5a}
+      .arrow-row{display:flex;align-items:center;gap:7px;background:#f8f9fa;border-radius:4px;padding:3px 7px;margin-bottom:5px;font-size:9px}
+      .gssp-badge{background:#d1fae5;border:1px solid #6ee7b7;border-radius:3px;padding:2px 6px;font-weight:700;font-size:9px;color:#065f46}
+      .info-box{background:#eff6ff;border:1px solid #bfdbfe;border-radius:4px;padding:5px 8px;margin-bottom:4px;line-height:1.6}
+      .box-title{font-weight:700;font-size:10px;color:#0f2d5a;margin-bottom:3px}
+      .warn-strip{background:#fefce8;border:1px solid #fde047;border-radius:4px;padding:3px 7px;font-size:9px;font-weight:700;color:#713f12}
+      .params-row{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px}
+      .param-box{text-align:center;background:#f8f9fa;border:1px solid #ced4da;border-radius:4px;padding:4px;min-width:54px;flex:1}
+      .p-icon{font-size:13px;line-height:1;margin-bottom:1px}.p-lbl{font-size:7px;color:#6c757d}.p-val{font-weight:700;font-size:9.5px;color:#0f2d5a}
+      .green-box{background:#f0fdf4;border:1px solid #86efac;border-radius:4px;padding:5px 8px;font-size:9px;line-height:1.7}
+      .g-title{font-weight:700;font-size:10px;color:#15803d;margin-bottom:3px}
+      .q-split{display:grid;grid-template-columns:1fr 1fr}
+      .q-split>div:first-child{border-left:1px solid #ced4da}
+      .kv{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #f1f5f9;font-size:9.5px}
+      .kv:last-child{border-bottom:none}.kv .k{color:#6c757d}.kv .v{font-weight:700;color:#0f2d5a}
+      .alert-strip{background:#fef2f2;border:1px solid #fca5a5;border-radius:3px;padding:3px 6px;margin-top:4px;font-size:8.5px;font-weight:700;color:#b91c1c}
+      .gauge-wrap{text-align:center;margin-bottom:5px}
+      .fine-box{background:#f8f9fa;border:1px solid #ced4da;border-radius:3px;padding:4px 6px;font-size:8.5px;line-height:1.6}
+      .fb-title{font-weight:700;font-size:9.5px;margin-bottom:2px;color:#0f2d5a}
+      .pills{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:6px}
+      .pill{border-radius:20px;padding:3px 9px;font-size:9px;font-weight:700}
+      .pill-g{background:#f0fdf4;border:1px solid #86efac;color:#166534}
+      .pill-r{background:#fef2f2;border:1px solid #fca5a5;color:#b91c1c}
+      .col-title{font-size:9.5px;font-weight:700;color:#0f2d5a;border-top:1px solid #ced4da;padding-top:6px;margin-top:4px;margin-bottom:6px}
+      .cols{display:flex;gap:7px;justify-content:space-around}
+      .col-bar{border-radius:4px 4px 0 0;width:52px;height:38px;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:12px;margin:0 auto}
+      .col-lbl{background:#0f2d5a;color:white;font-size:8px;padding:2px 4px;border-radius:0 0 4px 4px;text-align:center}
+      .qc-row{display:flex;align-items:center;gap:6px;background:#f8f9fa;border-radius:4px;padding:4px 7px;margin-top:6px;font-size:9px}
+      .qc-t{font-weight:700;color:#0f2d5a;font-size:9.5px}.qc-v{color:#6c757d}
+    `;
+    var body = document.getElementById("infographic").outerHTML.replace(/class="infographic"/,'class="infog"');
+    var fullHtml = '<!DOCTYPE html><html><head><meta charset="UTF-8"><style>' + css + '</style></head><body>' + body + '</body></html>';
+
+    // Open in new tab — user can screenshot or share
+    var blob = new Blob([fullHtml], {type: "text/html;charset=utf-8"});
+    var url = URL.createObjectURL(blob);
+
+    // Use html2canvas on a hidden iframe approach OR fallback to download HTML
+    // Since we're on Netlify, open the blob in new tab for screenshot
+    var win = window.open(url, "_blank");
+    if (!win) {
+      // Fallback: direct download of the HTML file
+      var a = document.createElement("a");
+      a.href = url;
+      var dateStr = (D.date || "הנחיות").replace(/\s/g, "-");
+      a.download = "הנחיות-" + dateStr + ".html";
+      a.click();
+      showToast("📄 הקובץ הורד — פתח בדפדפן וצלם מסך", "#7c3aed");
+    } else {
+      showToast("📸 צלם מסך ושלח בווטסאפ! 📲", "#7c3aed");
+    }
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 10000);
+  } catch(err) {
+    showToast("❌ שגיאה: " + err.message, "#b91c1c");
+  }
+  btn.textContent = "📸 הורד תמונה לווטסאפ";
+  btn.disabled = false;
+}
+</script>
+
+
+</body></html>
