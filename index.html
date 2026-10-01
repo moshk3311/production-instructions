@@ -330,6 +330,18 @@ function switchTab(tab,btn){
   renderFields();
 }
 
+var HEB_MONTHS=["ינואר","פברואר","מרץ","אפריל","מאי","יוני","יולי","אוגוסט","ספטמבר","אוקטובר","נובמבר","דצמבר"];
+function isoToHeb(iso){
+  var m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(iso||"");
+  return m?parseInt(m[3],10)+" ב"+HEB_MONTHS[parseInt(m[2],10)-1]+" "+m[1]:"";
+}
+function hebToIso(str){
+  var m=/^(\d{1,2}) ב(\S+) (\d{4})$/.exec((str||"").trim());
+  var mi=m?HEB_MONTHS.indexOf(m[2]):-1;
+  if(mi<0) return "";
+  return m[3]+"-"+("0"+(mi+1)).slice(-2)+"-"+("0"+m[1]).slice(-2);
+}
+
 function renderFields(){
   var isLbl = currentTab==="labels";
   var fields = TABS[currentTab]||[];
@@ -342,7 +354,8 @@ function renderFields(){
     var onInp = isLbl ? "L[this.dataset.k]=this.value;liveUpdate()" : "D[this.dataset.k]=this.value;liveUpdate()";
     var borderStyle = isLbl ? "border-color:rgba(245,158,11,0.5)" : "";
     html+="<div class='field-group'><label>"+f.l+"</label>";
-    if(f.ml) html+="<textarea data-k='"+f.k+"' oninput='"+onInp+"' style='"+borderStyle+"'>"+val+"</textarea>";
+    if(f.k==="date"&&!isLbl) html+="<input type='date' data-k='date' value='"+hebToIso(D.date)+"' oninput='D.date=isoToHeb(this.value);liveUpdate()'>";
+    else if(f.ml) html+="<textarea data-k='"+f.k+"' oninput='"+onInp+"' style='"+borderStyle+"'>"+val+"</textarea>";
     else html+="<input type='text' data-k='"+f.k+"' value='"+val+"' oninput='"+onInp+"' style='"+borderStyle+"'>";
     html+="</div>";
   });
